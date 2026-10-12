@@ -3,18 +3,9 @@
 <style>
   /* Layout: one-column phone app. Sticky header, scrolling body, fixed bottom tab bar. */
   :root {
-    --bg: #f4f6f8;
-    --surface: #ffffff;
-    --fg: #1a1d22;
-    --muted: #5d6673;
-    --line: #dde2e8;
-    --accent: #0c6b5e;
-    --accent-ink: #ffffff;
-    --accent-soft: #d8efe9;
-    --warn: #a3520b;
-    --warn-soft: #f9e8d4;
-    --bad: #9b2c2c;
-    --bad-soft: #f8dede;
+    --bg: #f4f6f8; --surface: #ffffff; --fg: #1a1d22; --muted: #5d6673; --line: #dde2e8;
+    --accent: #0c6b5e; --accent-ink: #ffffff; --accent-soft: #d8efe9;
+    --warn: #a3520b; --warn-soft: #f9e8d4; --bad: #9b2c2c; --bad-soft: #f8dede;
     --font-body: "IBM Plex Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
     --font-display: "Noto Serif KR", "Apple SD Gothic Neo", serif;
     --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
@@ -23,15 +14,13 @@
     :root:not([data-theme="light"]) {
       --bg: #121418; --surface: #1b1e24; --fg: #e8eaed; --muted: #9aa3ae; --line: #2c313a;
       --accent: #4fbfae; --accent-ink: #0d1a17; --accent-soft: #173330;
-      --warn: #e4a35d; --warn-soft: #3a2a16; --bad: #e07a7a; --bad-soft: #3c1f1f;
-      color-scheme: dark;
+      --warn: #e4a35d; --warn-soft: #3a2a16; --bad: #e07a7a; --bad-soft: #3c1f1f; color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
     --bg: #121418; --surface: #1b1e24; --fg: #e8eaed; --muted: #9aa3ae; --line: #2c313a;
     --accent: #4fbfae; --accent-ink: #0d1a17; --accent-soft: #173330;
-    --warn: #e4a35d; --warn-soft: #3a2a16; --bad: #e07a7a; --bad-soft: #3c1f1f;
-    color-scheme: dark;
+    --warn: #e4a35d; --warn-soft: #3a2a16; --bad: #e07a7a; --bad-soft: #3c1f1f; color-scheme: dark;
   }
   html, body { height: 100%; }
   body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
@@ -42,15 +31,19 @@
   header.top h1 { margin: 0; font-family: var(--font-display); font-size: 22px; font-weight: 600; letter-spacing: -0.01em; }
   header.top .date { font-family: var(--font-mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
   main { padding-block: 14px 24px; padding-inline: 16px; display: flex; flex-direction: column; gap: 14px; }
-  .status { font-size: 12px; color: var(--muted); font-family: var(--font-mono); }
+  .status { font-size: 12px; color: var(--muted); font-family: var(--font-mono); display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .status .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); display: inline-block; }
+  .status .dot.live { background: var(--accent); }
+  .status .dot.copy { background: var(--warn); }
+  .status button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 2px 10px; font-size: 12px; cursor: pointer; }
   .notice { background: var(--warn-soft); color: var(--warn); border-radius: 10px; padding: 10px 12px; font-size: 14px; }
   .empty { color: var(--muted); font-size: 14px; padding: 18px 4px; text-align: center; }
   section h2 { margin: 0 0 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
   .brief { font-family: var(--font-display); font-size: 17px; line-height: 1.55; text-wrap: balance; margin: 0; }
   .list { display: flex; flex-direction: column; gap: 10px; }
   .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; min-width: 0; }
-  .card .title { font-weight: 600; font-size: 16px; margin: 0 0 4px; text-wrap: balance; }
-  .card .why { color: var(--muted); font-size: 14px; margin: 0 0 6px; }
+  .card .title { font-weight: 600; font-size: 16px; margin: 0 0 4px; text-wrap: balance; overflow-wrap: anywhere; }
+  .card .why { color: var(--muted); font-size: 14px; margin: 0 0 6px; overflow-wrap: anywhere; }
   .card .action { font-size: 14px; margin: 0; }
   .card .action::before { content: "→ "; color: var(--accent); }
   .btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
@@ -59,12 +52,26 @@
   .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
   .btn.danger { color: var(--bad); }
   .btn[disabled] { opacity: 0.5; cursor: default; }
-  .pill { display: inline-block; font-size: 11px; font-family: var(--font-mono); padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); vertical-align: middle; }
+  .pill { display: inline-block; font-size: 11px; font-family: var(--font-mono); padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); vertical-align: middle; white-space: nowrap; }
   .pill.medium { background: var(--warn-soft); color: var(--warn); }
-  .pill.low { background: var(--line); color: var(--muted); }
-  .pill.done { background: var(--line); color: var(--muted); }
-  .pill.declined { background: var(--bad-soft); color: var(--bad); }
+  .pill.low, .pill.done, .pill.expired, .pill.request { background: var(--line); color: var(--muted); }
+  .pill.declined, .pill.rejected { background: var(--bad-soft); color: var(--bad); }
+  .pill.plan_requested, .pill.planned, .pill.in_progress { background: var(--warn-soft); color: var(--warn); }
   .meta { font-family: var(--font-mono); font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .tags { display: flex; flex-wrap: wrap; gap: 4px; margin: 6px 0; }
+  .tag { font-size: 12px; color: var(--muted); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 1px 6px; }
+  .quotes { margin: 8px 0 0; padding-left: 10px; border-left: 2px solid var(--line); color: var(--muted); font-size: 13px; display: flex; flex-direction: column; gap: 4px; }
+  .quotes div { overflow-wrap: anywhere; }
+  .plan { margin: 10px 0 0; padding: 10px 12px; background: var(--accent-soft); border-radius: 10px; font-size: 14px; }
+  .plan p { margin: 0 0 6px; font-weight: 600; }
+  .plan ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 3px; }
+  details.more summary { cursor: pointer; color: var(--muted); font-size: 13px; list-style: none; margin-top: 6px; }
+  details.more summary::-webkit-details-marker { display: none; }
+  details.more summary::before { content: "▸ "; }
+  details.more[open] summary::before { content: "▾ "; }
+  .filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+  .filter button { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 5px 12px; font-size: 13px; cursor: pointer; color: var(--muted); }
+  .filter button[aria-pressed="true"] { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); font-weight: 600; }
   /* 기록 */
   .moods { display: flex; flex-wrap: wrap; gap: 8px; }
   .mood { border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 7px 12px; font-size: 14px; cursor: pointer; }
@@ -79,6 +86,10 @@
   .log p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
   /* 프로필 */
   .rules { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 4px; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .stat { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 10px; min-width: 0; }
+  .stat .v { font-family: var(--font-mono); font-size: 20px; font-variant-numeric: tabular-nums; }
+  .stat .k { font-size: 12px; color: var(--muted); }
   details.cat { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; }
   details.cat summary { cursor: pointer; padding: 12px 14px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; list-style: none; }
   details.cat summary::-webkit-details-marker { display: none; }
@@ -86,23 +97,24 @@
   details.cat[open] summary { border-bottom: 1px solid var(--line); }
   .pref { padding: 12px 14px; border-bottom: 1px solid var(--line); }
   .pref:last-child { border-bottom: 0; }
-  .pref .s { margin: 0 0 4px; }
+  .pref .s { margin: 0 0 4px; overflow-wrap: anywhere; }
   .pref.rejected .s { text-decoration: line-through; color: var(--muted); }
-  .pref blockquote { margin: 6px 0 0; padding-left: 10px; border-left: 2px solid var(--line); color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
   .pref .btns { margin-top: 8px; }
   .pref .btn { padding: 5px 11px; font-size: 13px; }
+  .kw { display: flex; flex-wrap: wrap; gap: 6px; }
+  .kw span { font-size: 13px; background: var(--surface); border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; }
+  .kw span b { font-family: var(--font-mono); font-weight: 400; color: var(--muted); margin-left: 4px; }
   /* 탭바 */
   nav.tabs { position: fixed; left: 0; right: 0; bottom: 0; background: var(--surface); border-top: 1px solid var(--line); display: flex; padding-bottom: env(safe-area-inset-bottom, 0px); z-index: 6; }
-  nav.tabs button { flex: 1; border: 0; background: none; padding: 10px 4px 8px; font-size: 12px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; }
+  nav.tabs button { flex: 1; border: 0; background: none; padding: 10px 4px 8px; font-size: 12px; color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; position: relative; }
   nav.tabs button .ic { font-size: 20px; line-height: 1; }
   nav.tabs button[aria-selected="true"] { color: var(--accent); font-weight: 600; }
   nav.tabs button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-  .badge { position: relative; }
-  .badge[data-n]:not([data-n="0"])::after { content: attr(data-n); position: absolute; top: 4px; right: calc(50% - 22px); background: var(--accent); color: var(--accent-ink); font-size: 10px; font-family: var(--font-mono); padding: 1px 5px; border-radius: 999px; }
-  .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(80px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); padding: 8px 14px; border-radius: 999px; font-size: 13px; z-index: 7; opacity: 0; transition: opacity .2s; pointer-events: none; }
+  nav.tabs button[data-n]:not([data-n="0"])::after { content: attr(data-n); position: absolute; top: 4px; right: calc(50% - 22px); background: var(--accent); color: var(--accent-ink); font-size: 10px; font-family: var(--font-mono); padding: 1px 5px; border-radius: 999px; }
+  .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(80px + env(safe-area-inset-bottom, 0px)); background: var(--fg); color: var(--bg); padding: 8px 14px; border-radius: 999px; font-size: 13px; z-index: 7; opacity: 0; transition: opacity .2s; pointer-events: none; max-width: calc(100% - 32px); }
   .toast.show { opacity: 1; }
   @media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
-  @media (min-width: 640px) { main { max-width: 560px; width: 100%; margin: 0 auto; } header.top { max-width: 560px; margin: 0 auto; } nav.tabs { max-width: 560px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); } }
+  @media (min-width: 640px) { main, header.top, nav.tabs { max-width: 560px; width: 100%; margin: 0 auto; } nav.tabs { border-left: 1px solid var(--line); border-right: 1px solid var(--line); } }
 </style>
 
 <div class="app">
@@ -113,7 +125,8 @@
   <main id="main"></main>
 </div>
 <nav class="tabs" aria-label="탭">
-  <button type="button" id="tab-today" class="badge" data-n="0" aria-selected="true"><span class="ic">☀</span>오늘</button>
+  <button type="button" id="tab-today" data-n="0" aria-selected="true"><span class="ic">☀</span>오늘</button>
+  <button type="button" id="tab-needs" data-n="0" aria-selected="false"><span class="ic">◆</span>니즈</button>
   <button type="button" id="tab-log" aria-selected="false"><span class="ic">✎</span>기록</button>
   <button type="button" id="tab-profile" aria-selected="false"><span class="ic">◎</span>프로필</button>
 </nav>
@@ -121,81 +134,113 @@
 
 <script>
 (function () {
+  // 저장소: 앱은 여기의 secretary/app/data.json 을 GitHub 커넥터로 직접 읽는다 (토큰 0).
+  const GH = { server: "github", owner: "Jinseong1991", repo: "jsfaceoverlay-updates", branch: "claude/funny-gauss-v07n1x", dataPath: "secretary/app/data.json", inboxDir: "secretary/inbox/phone/" };
   const MOODS = [["😊", "좋음"], ["😐", "보통"], ["😩", "피곤"], ["😤", "답답"], ["🔥", "급함"], ["🙂", "만족"]];
   const CATS = ["일상", "감정", "선호", "비선호", "관심사", "작업습관"];
+  const NEED_LABEL = { proposed: "제안됨", approved: "맞아요", plan_requested: "계획 요청", planned: "계획 있음", in_progress: "진행 중", done: "완료", rejected: "아니에요" };
   const state = {
-    db: null, uid: null, dbState: "loading", tab: "today",
-    profile: null, suggestions: [], briefs: [], logs: [], feedback: {},
-    draft: { mood: null, category: "일상", text: "" }, busy: new Set(),
+    mcp: null, db: null, source: "loading", // loading | github | db | none
+    data: null, briefs: [], local: {}, // local: id -> {status,...} 낙관적 반영
+    tab: "today", needFilter: "open", openCat: null, busy: new Set(), draft: { mood: null, category: "일상", text: "" },
+    fetchedAt: null, error: null,
   };
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const nowIso = () => new Date().toISOString().replace(/\.\d{3}Z$/, "Z");
   const KST = "Asia/Seoul";
-  function todayStr() {
-    const d = new Date();
-    return new Intl.DateTimeFormat("sv-SE", { timeZone: KST, year: "numeric", month: "2-digit", day: "2-digit" }).format(d);
-  }
+  const todayStr = () => new Intl.DateTimeFormat("sv-SE", { timeZone: KST, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date());
   function fmtWhen(iso) {
     if (!iso) return "";
-    const d = new Date(iso);
-    if (isNaN(d)) return esc(iso);
+    const d = new Date(iso); if (isNaN(d)) return esc(iso);
     return new Intl.DateTimeFormat("ko-KR", { timeZone: KST, month: "numeric", day: "numeric", hour: "2-digit", minute: "2-digit", hour12: false }).format(d);
   }
   let toastTimer = null;
-  function toast(msg) {
-    const t = $("toast"); t.textContent = msg; t.classList.add("show");
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 1800);
-  }
-  try { const saved = localStorage.getItem("secretary.tab"); if (saved === "today" || saved === "log" || saved === "profile") state.tab = saved; } catch (e) {}
+  function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove("show"), 2200); }
+  try { const saved = localStorage.getItem("secretary.tab"); if (["today", "needs", "log", "profile"].includes(saved)) state.tab = saved; } catch (e) {}
+
+  // ---------- derived ----------
+  function needs() { return (state.data?.needs || []).map((n) => Object.assign({}, n, state.local[n.id] || {})); }
+  function suggestions() { return (state.data?.suggestions || []).map((s) => Object.assign({}, s, state.local[s.id] || {})); }
+  function openNeeds() { return needs().filter((n) => !["rejected", "done"].includes(n.status)); }
 
   // ---------- render ----------
   function render() {
     $("today").textContent = new Intl.DateTimeFormat("ko-KR", { timeZone: KST, month: "long", day: "numeric", weekday: "short" }).format(new Date());
-    for (const t of ["today", "log", "profile"]) $("tab-" + t).setAttribute("aria-selected", String(state.tab === t));
-    $("tab-today").dataset.n = String(state.suggestions.filter((s) => s.status === "pending").length);
-    const main = $("main");
-    let html = "";
-    if (state.dbState === "none") html += '<div class="notice">claude.ai에 로그인한 상태로 열어야 기록과 제안이 보입니다.</div>';
-    else if (state.dbState === "loading") html += '<div class="status">불러오는 중…</div>';
-    html += state.tab === "today" ? renderToday() : state.tab === "log" ? renderLog() : renderProfile();
-    main.innerHTML = html;
+    for (const t of ["today", "needs", "log", "profile"]) $("tab-" + t).setAttribute("aria-selected", String(state.tab === t));
+    $("tab-today").dataset.n = String(suggestions().filter((s) => s.status === "pending").length);
+    $("tab-needs").dataset.n = String(needs().filter((n) => n.status === "proposed").length);
+    let html = renderStatus();
+    if (state.source === "none") html += '<div class="notice">데이터를 불러올 수 없어요. claude.ai에 로그인했는지, GitHub 커넥터가 연결됐는지 확인해 주세요.</div>';
+    html += state.tab === "today" ? renderToday() : state.tab === "needs" ? renderNeeds() : state.tab === "log" ? renderLog() : renderProfile();
+    $("main").innerHTML = html;
     bind();
+  }
+  function renderStatus() {
+    const d = state.data;
+    const src = state.source === "github" ? '<span class="dot live"></span>GitHub 최신' : state.source === "db" ? '<span class="dot copy"></span>아침 사본' : state.source === "loading" ? '<span class="dot"></span>불러오는 중' : '<span class="dot"></span>연결 없음';
+    const gen = d ? ` · 분석 ${fmtWhen(d.generated_at)}` : "";
+    const st = d?.stats ? ` · 발화 ${d.stats.messages}건 / 세션 ${d.stats.sessions}개` : "";
+    return `<div class="status">${src}${gen}${st}<button type="button" id="reload">새로고침</button></div>`;
   }
   function renderToday() {
     const today = todayStr();
     const brief = state.briefs.find((b) => b.date === today) || state.briefs[0];
-    const pending = state.suggestions.filter((s) => s.status === "pending");
-    const rest = state.suggestions.filter((s) => s.status !== "pending").slice(0, 10);
-    let h = "";
-    h += "<section>";
+    const pending = suggestions().filter((s) => s.status === "pending");
+    const rest = suggestions().filter((s) => s.status !== "pending").slice(0, 6);
+    const top = openNeeds().filter((n) => n.status === "proposed").slice(0, 3);
+    let h = "<section>";
     if (brief) h += `<p class="brief">${esc(brief.summary)}</p><div class="meta" style="margin-top:6px">${brief.date === today ? "오늘" : esc(brief.date)} 브리핑 · ${fmtWhen(brief.generated_at)}</div>`;
-    else if (state.dbState === "ready") h += '<p class="brief">아직 브리핑이 없어요. 매일 아침 비서가 지난 세션과 기록을 읽고 여기에 씁니다.</p>';
+    else if (state.data) h += `<p class="brief">세션 ${state.data.stats?.sessions || 0}개에서 니즈 ${openNeeds().length}개를 찾았어요. 아래에서 맞는지 알려 주면 거기에 맞춰 챙깁니다.</p>`;
+    else if (state.source !== "loading") h += '<p class="brief">아직 데이터가 없어요. PC에서 수집기를 한 번 돌리면 여기에 나타납니다.</p>';
     h += "</section>";
+    if (top.length) {
+      h += '<section><h2>비서가 보기엔 이게 원하는 것 같아요</h2><div class="list">';
+      for (const n of top) h += needCard(n, true);
+      h += "</div></section>";
+    }
     h += `<section><h2>먼저 해줄까요? ${pending.length ? `<span class="pill">${pending.length}</span>` : ""}</h2>`;
     if (!pending.length) h += '<div class="empty">지금은 답을 기다리는 제안이 없어요.</div>';
     h += '<div class="list">';
     for (const s of pending) {
       const busy = state.busy.has(s.id);
-      h += `<article class="card" data-id="${esc(s.id)}">
-        <p class="title">${esc(s.title)}</p>
-        <p class="why">${esc(s.why)}</p>
-        <p class="action">${esc(s.action)}</p>
-        <div class="btns">
-          <button type="button" class="btn primary act" data-status="accepted" ${busy ? "disabled" : ""}>해줘</button>
-          <button type="button" class="btn act" data-status="expired" ${busy ? "disabled" : ""}>나중에</button>
-          <button type="button" class="btn danger act" data-status="declined" ${busy ? "disabled" : ""}>필요없어</button>
-        </div></article>`;
+      h += `<article class="card" data-id="${esc(s.id)}"><p class="title">${esc(s.title)}</p><p class="why">${esc(s.why)}</p><p class="action">${esc(s.action)}</p>
+        <div class="btns"><button type="button" class="btn primary sg" data-status="accepted" ${busy ? "disabled" : ""}>해줘</button><button type="button" class="btn sg" data-status="expired" ${busy ? "disabled" : ""}>나중에</button><button type="button" class="btn danger sg" data-status="declined" ${busy ? "disabled" : ""}>필요없어</button></div></article>`;
     }
     h += "</div></section>";
     if (rest.length) {
       h += '<section><h2>지난 제안</h2><div class="list">';
-      for (const s of rest) {
-        const label = { accepted: "하는 중", done: "완료", declined: "거절", expired: "보류" }[s.status] || s.status;
-        h += `<article class="card"><p class="title">${esc(s.title)} <span class="pill ${esc(s.status)}">${label}</span></p>${s.note ? `<p class="why">${esc(s.note)}</p>` : ""}<div class="meta">${fmtWhen(s.resolved_at || s.created_at)}</div></article>`;
-      }
+      for (const s of rest) { const label = { accepted: "하는 중", done: "완료", declined: "거절", expired: "보류" }[s.status] || s.status; h += `<article class="card"><p class="title">${esc(s.title)} <span class="pill ${esc(s.status)}">${label}</span></p>${s.note ? `<p class="why">${esc(s.note)}</p>` : ""}<div class="meta">${fmtWhen(s.resolved_at || s.created_at)}</div></article>`; }
       h += "</div></section>";
     }
+    return h;
+  }
+  function needCard(n, compact) {
+    const busy = state.busy.has(n.id);
+    const dis = busy || state.source === "none" ? "disabled" : "";
+    let h = `<article class="card" data-nid="${esc(n.id)}"><p class="title">${esc(n.title)} <span class="pill ${esc(n.status)}">${NEED_LABEL[n.status] || esc(n.status)}</span></p>`;
+    h += `<div class="meta">${n.mentions}회 언급 · ${n.kind === "feature" ? "기능" : "요청"} · 마지막 ${fmtWhen(n.last_seen)}</div>`;
+    if (n.tags && n.tags.length) h += `<div class="tags">${n.tags.map((t) => `<span class="tag">${esc(t)}</span>`).join("")}</div>`;
+    if (n.plan) h += `<div class="plan"><p>${esc(n.plan.summary || "계획")}</p><ol>${(n.plan.steps || []).map((s) => `<li>${esc(s)}</li>`).join("")}</ol></div>`;
+    if (!compact && n.evidence && n.evidence.length) h += `<details class="more"><summary>내가 한 말 ${n.evidence.length}개</summary><div class="quotes">${n.evidence.map((q) => `<div>“${esc(q)}”</div>`).join("")}</div></details>`;
+    h += '<div class="btns">';
+    if (n.status === "proposed") h += `<button type="button" class="btn primary nd" data-status="approved" ${dis}>맞아</button><button type="button" class="btn nd" data-status="plan_requested" ${dis}>계획 세워줘</button><button type="button" class="btn danger nd" data-status="rejected" ${dis}>아니야</button>`;
+    else if (n.status === "approved") h += `<button type="button" class="btn primary nd" data-status="plan_requested" ${dis}>계획 세워줘</button><button type="button" class="btn nd" data-status="in_progress" ${dis}>진행 중</button><button type="button" class="btn danger nd" data-status="rejected" ${dis}>아니야</button>`;
+    else if (n.status === "plan_requested") h += `<span class="meta">다음 아침 브리핑 때 계획이 붙어요</span><button type="button" class="btn danger nd" data-status="rejected" ${dis}>취소</button>`;
+    else if (n.status === "planned") h += `<button type="button" class="btn primary nd" data-status="in_progress" ${dis}>이 계획으로 시작</button><button type="button" class="btn nd" data-status="plan_requested" ${dis}>다시 짜줘</button><button type="button" class="btn danger nd" data-status="rejected" ${dis}>아니야</button>`;
+    else if (n.status === "in_progress") h += `<button type="button" class="btn primary nd" data-status="done" ${dis}>끝났어</button><button type="button" class="btn nd" data-status="approved" ${dis}>잠깐 멈춤</button>`;
+    else if (n.status === "rejected") h += `<button type="button" class="btn nd" data-status="proposed" ${dis}>되돌리기</button>`;
+    else if (n.status === "done") h += `<button type="button" class="btn nd" data-status="in_progress" ${dis}>다시 열기</button>`;
+    h += "</div></article>";
+    return h;
+  }
+  function renderNeeds() {
+    const all = needs();
+    const f = state.needFilter;
+    const list = f === "open" ? all.filter((n) => !["rejected", "done"].includes(n.status)) : f === "feature" ? all.filter((n) => n.kind === "feature" && !["rejected", "done"].includes(n.status)) : f === "closed" ? all.filter((n) => ["rejected", "done"].includes(n.status)) : all;
+    let h = `<section><div class="filter">${[["open", "열린 것"], ["feature", "기능"], ["closed", "닫힌 것"], ["all", "전부"]].map(([k, l]) => `<button type="button" class="nf" data-f="${k}" aria-pressed="${f === k}">${l}</button>`).join("")}</div>`;
+    if (!list.length) h += `<div class="empty">${state.data ? "여기엔 없어요." : "아직 분석된 니즈가 없어요."}</div>`;
+    h += '<div class="list">' + list.map((n) => needCard(n, false)).join("") + "</div></section>";
     return h;
   }
   function renderLog() {
@@ -203,45 +248,48 @@
     let h = '<section><h2>지금 어때요?</h2><div class="moods">';
     for (const [e, n] of MOODS) h += `<button type="button" class="mood" data-mood="${e} ${n}" aria-pressed="${d.mood === e + " " + n}">${e} ${n}</button>`;
     h += "</div></section>";
-    h += `<section><h2>남길 말</h2>
-      <div class="row" style="margin-bottom:8px"><label for="log-cat" class="meta">종류</label><select id="log-cat">${CATS.map((c) => `<option ${d.category === c ? "selected" : ""}>${c}</option>`).join("")}</select></div>
-      <textarea id="log-text" placeholder="예: 오늘 아침엔 설명 길게 하는 거 짜증났음 / 점심 뭐 먹을지 매번 고민함 / 이번 주 금요일 발표">${esc(d.text)}</textarea>
-      <div class="btns"><button type="button" class="btn primary" id="log-save" ${state.dbState !== "ready" ? "disabled" : ""}>저장</button><span class="meta" style="align-self:center">비서가 다음 동기화 때 읽습니다</span></div></section>`;
+    h += `<section><h2>남길 말</h2><div class="row" style="margin-bottom:8px"><label for="log-cat" class="meta">종류</label><select id="log-cat">${CATS.map((c) => `<option ${d.category === c ? "selected" : ""}>${c}</option>`).join("")}</select></div>
+      <textarea id="log-text" placeholder="예: 설명 길게 하는 거 싫음 / 이번 주 금요일 발표 / 옷장 기능이 제일 급함">${esc(d.text)}</textarea>
+      <div class="btns"><button type="button" class="btn primary" id="log-save" ${state.source === "none" ? "disabled" : ""}>저장</button><span class="meta" style="align-self:center">다음 수집 때 비서가 읽어요</span></div></section>`;
+    const logs = state.data?.logs || [];
     h += '<section><h2>최근 기록</h2>';
-    if (!state.logs.length) h += '<div class="empty">아직 기록이 없어요. 사소한 것도 좋아요.</div>';
-    h += '<div class="list">';
-    for (const l of state.logs) h += `<div class="card log"><div class="m">${esc((l.mood || "·").split(" ")[0])}</div><div><p>${esc(l.text)}</p><div class="meta">${esc(l.category || "")} · ${fmtWhen(l.at)}</div></div></div>`;
-    h += "</div></section>";
+    if (!logs.length) h += '<div class="empty">아직 기록이 없어요. 사소한 것도 좋아요.</div>';
+    h += '<div class="list">' + logs.map((l) => `<div class="card log"><div class="m">${esc((l.mood || "·").split(" ")[0])}</div><div><p>${esc(l.text)}</p><div class="meta">${esc(l.category || "")} · ${fmtWhen(l.at)}</div></div></div>`).join("") + "</div></section>";
     return h;
   }
   function renderProfile() {
-    const p = state.profile;
-    let h = "";
-    if (!p) return h + '<div class="empty">아직 프로필이 없어요. 첫 동기화가 끝나면 여기에 비서가 파악한 내용이 나옵니다.</div>';
-    h += `<section><div class="status">근거 ${p.signal_count || 0}건 · 갱신 ${fmtWhen(p.updated_at)}</div></section>`;
-    if (p.rules && p.rules.length) h += `<section><h2>비서가 지키는 규칙</h2><ul class="rules">${p.rules.map((r) => `<li>${esc(r)}</li>`).join("")}</ul></section>`;
+    const d = state.data;
+    if (!d) return '<div class="empty">아직 프로필이 없어요. PC에서 수집기를 돌리면 여기에 비서가 파악한 내용이 나옵니다.</div>';
+    const st = d.stats || {};
+    let h = `<section><div class="stats"><div class="stat"><div class="v">${st.messages || 0}</div><div class="k">발화</div></div><div class="stat"><div class="v">${st.sessions || 0}</div><div class="k">세션</div></div><div class="stat"><div class="v">${d.signal_count || 0}</div><div class="k">근거</div></div></div></section>`;
+    if (d.rules && d.rules.length) h += `<section><h2>비서가 지키는 규칙</h2><ul class="rules">${d.rules.map((r) => `<li>${esc(r)}</li>`).join("")}</ul></section>`;
     h += '<section><h2>비서가 파악한 것</h2><div class="list">';
-    for (const c of p.categories || []) {
-      h += `<details class="cat" ${state.openCat === c.name ? "open" : ""} data-cat="${esc(c.name)}"><summary>${esc(c.name)}<span class="n">${c.items.length}</span></summary>`;
-      for (const it of c.items) {
-        const fb = state.feedback[it.id];
-        const rejected = it.status === "rejected" || (fb && fb.verdict === "wrong");
+    for (const c of d.categories || []) {
+      const items = c.items.map((it) => Object.assign({}, it, state.local[it.id] || {}));
+      h += `<details class="cat" ${state.openCat === c.name ? "open" : ""} data-cat="${esc(c.name)}"><summary>${esc(c.name)}<span class="n">${items.filter((i) => i.status !== "rejected").length}</span></summary>`;
+      for (const it of items) {
+        const rejected = it.status === "rejected";
         const quote = it.quotes && it.quotes.length ? it.quotes[it.quotes.length - 1] : "";
-        h += `<div class="pref ${rejected ? "rejected" : ""}" data-pid="${esc(it.id)}">
-          <p class="s">${esc(it.statement)} <span class="pill ${esc(it.confidence)}">${esc(it.confidence)} · ${it.count}</span></p>
-          ${quote ? `<blockquote>“${esc(quote)}”</blockquote>` : ""}
-          <div class="btns">${rejected ? '<span class="meta">틀렸다고 표시함 · 다시 추론하지 않음</span>' : fb && fb.verdict === "right" ? '<span class="meta">맞다고 표시함</span>' : `<button type="button" class="btn fb" data-verdict="right">맞아</button><button type="button" class="btn danger fb" data-verdict="wrong">틀렸어</button>`}</div>
-        </div>`;
+        h += `<div class="pref ${rejected ? "rejected" : ""}" data-pid="${esc(it.id)}"><p class="s">${esc(it.statement)} <span class="pill ${esc(it.confidence)}">${esc(it.confidence)} · ${it.count}</span></p>${quote ? `<div class="quotes"><div>“${esc(quote)}”</div></div>` : ""}
+          <div class="btns">${rejected ? '<span class="meta">틀렸다고 표시함 · 다시 추론하지 않음</span>' : it.confirmed ? '<span class="meta">맞다고 표시함</span>' : `<button type="button" class="btn fb" data-verdict="right">맞아</button><button type="button" class="btn danger fb" data-verdict="wrong">틀렸어</button>`}</div></div>`;
       }
       h += "</details>";
     }
     h += "</div></section>";
+    if (d.keywords && d.keywords.length) h += `<section><h2>자주 나오는 말</h2><div class="kw">${d.keywords.slice(0, 20).map((k) => `<span>${esc(k.word)}<b>${k.count}</b></span>`).join("")}</div></section>`;
+    if (st.hour_histogram) {
+      const hs = Object.entries(st.hour_histogram); const max = Math.max(1, ...hs.map(([, v]) => v));
+      h += `<section><h2>활동 시간 (한국)</h2><div class="card" style="display:grid;grid-template-columns:repeat(24,1fr);gap:2px;align-items:end;height:80px">${Array.from({ length: 24 }, (_, i) => { const v = st.hour_histogram[String(i)] || 0; return `<div title="${i}시 ${v}건" style="background:${v ? "var(--accent)" : "var(--line)"};height:${Math.max(4, Math.round(v / max * 60))}px;border-radius:2px"></div>`; }).join("")}</div><div class="meta" style="margin-top:4px">0시 → 23시</div></section>`;
+    }
     return h;
   }
 
   // ---------- events ----------
   function bind() {
-    document.querySelectorAll(".act").forEach((b) => b.addEventListener("click", onResolve));
+    const r = $("reload"); if (r) r.addEventListener("click", () => load(true));
+    document.querySelectorAll(".sg").forEach((b) => b.addEventListener("click", onSuggestion));
+    document.querySelectorAll(".nd").forEach((b) => b.addEventListener("click", onNeed));
+    document.querySelectorAll(".nf").forEach((b) => b.addEventListener("click", () => { state.needFilter = b.dataset.f; render(); }));
     document.querySelectorAll(".mood").forEach((b) => b.addEventListener("click", () => { state.draft.mood = state.draft.mood === b.dataset.mood ? null : b.dataset.mood; render(); }));
     const ta = $("log-text"); if (ta) ta.addEventListener("input", () => { state.draft.text = ta.value; });
     const sel = $("log-cat"); if (sel) sel.addEventListener("change", () => { state.draft.category = sel.value; });
@@ -249,58 +297,97 @@
     document.querySelectorAll(".fb").forEach((b) => b.addEventListener("click", onFeedback));
     document.querySelectorAll("details.cat").forEach((d) => d.addEventListener("toggle", () => { if (d.open) state.openCat = d.dataset.cat; }));
   }
-  for (const t of ["today", "log", "profile"]) $("tab-" + t).addEventListener("click", () => { state.tab = t; try { localStorage.setItem("secretary.tab", t); } catch (e) {} render(); });
+  for (const t of ["today", "needs", "log", "profile"]) $("tab-" + t).addEventListener("click", () => { state.tab = t; try { localStorage.setItem("secretary.tab", t); } catch (e) {} render(); });
 
-  async function onResolve(ev) {
-    const card = ev.currentTarget.closest("[data-id]"); const id = card.dataset.id; const status = ev.currentTarget.dataset.status;
-    if (!state.db || state.busy.has(id)) return;
-    state.busy.add(id); render();
-    try {
-      await state.db.doc("suggestions/" + id).update({ status, resolved_at: nowIso(), note: status === "expired" ? "폰에서 '나중에'" : null });
-      toast(status === "accepted" ? "비서가 다음 세션에서 실행해요" : status === "declined" ? "다시 제안하지 않을게요" : "보류했어요");
-    } catch (e) { toast("저장 실패: " + (e && e.code ? e.code : "unavailable")); }
-    state.busy.delete(id); render();
+  async function onSuggestion(ev) {
+    const id = ev.currentTarget.closest("[data-id]").dataset.id; const status = ev.currentTarget.dataset.status;
+    const ok = await sendEvent({ kind: "suggestion", id, status, note: status === "expired" ? "폰에서 '나중에'" : null }, id);
+    if (ok) { state.local[id] = Object.assign({}, state.local[id], { status, resolved_at: nowIso() }); toast(status === "accepted" ? "다음 브리핑 세션이 실행해요" : status === "declined" ? "다시 제안하지 않을게요" : "보류했어요"); }
+    render();
+  }
+  async function onNeed(ev) {
+    const id = ev.currentTarget.closest("[data-nid]").dataset.nid; const status = ev.currentTarget.dataset.status;
+    const ok = await sendEvent({ kind: "need", need_id: id, status }, id);
+    if (ok) { state.local[id] = Object.assign({}, state.local[id], { status }); toast({ approved: "그렇게 알게요", plan_requested: "다음 브리핑 때 계획을 붙여요", rejected: "지웠어요", in_progress: "진행 중으로", done: "완료", proposed: "되돌렸어요" }[status] || "저장"); }
+    render();
   }
   async function onSaveLog() {
     const text = state.draft.text.trim();
     if (!text && !state.draft.mood) { toast("기분이나 한 줄을 남겨 주세요"); return; }
-    if (!state.db) return;
-    const btn = $("log-save"); btn.disabled = true;
-    try {
-      await state.db.collection("logs").add({ at: nowIso(), text, mood: state.draft.mood, category: state.draft.category });
-      state.draft = { mood: null, category: state.draft.category, text: "" };
-      toast("남겼어요");
-    } catch (e) { toast("저장 실패: " + (e && e.code ? e.code : "unavailable")); }
+    const ok = await sendEvent({ kind: "log", text, mood: state.draft.mood, category: state.draft.category }, "log");
+    if (ok) { if (state.data) { state.data.logs = [{ at: nowIso(), text, mood: state.draft.mood, category: state.draft.category }].concat(state.data.logs || []); } state.draft = { mood: null, category: state.draft.category, text: "" }; toast("남겼어요"); }
     render();
   }
   async function onFeedback(ev) {
     const pid = ev.currentTarget.closest("[data-pid]").dataset.pid; const verdict = ev.currentTarget.dataset.verdict;
-    if (!state.db) return;
-    ev.currentTarget.disabled = true;
-    try {
-      await state.db.collection("feedback").add({ profile_id: pid, verdict, at: nowIso(), note: null });
-      state.feedback[pid] = { verdict };
-      toast(verdict === "wrong" ? "다음 동기화 때 지울게요" : "고마워요");
-    } catch (e) { toast("저장 실패: " + (e && e.code ? e.code : "unavailable")); }
+    const ok = await sendEvent({ kind: "feedback", profile_id: pid, verdict }, pid);
+    if (ok) { state.local[pid] = verdict === "wrong" ? { status: "rejected" } : { confirmed: true }; toast(verdict === "wrong" ? "다음 수집 때 지워요" : "고마워요"); }
     render();
   }
 
-  // ---------- data ----------
+  // ---------- data: 보내기 ----------
+  // GitHub 커넥터가 있으면 inbox/phone/<id>.json 으로 커밋 (토큰 0). 없으면 아티팩트 DB events/<id> (아침 세션이 옮김).
+  async function sendEvent(ev, busyKey) {
+    if (state.busy.has(busyKey)) return false;
+    state.busy.add(busyKey); render();
+    const id = "ev-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 7);
+    const body = Object.assign({ id, at: nowIso(), via: state.source }, ev);
+    let ok = false, err = null;
+    try {
+      if (state.mcp && state.source === "github") {
+        await state.mcp.callTool(GH.server, "create_or_update_file", { owner: GH.owner, repo: GH.repo, branch: GH.branch, path: GH.inboxDir + id + ".json", content: JSON.stringify(body, null, 2) + "\n", message: "phone: " + ev.kind }, { cache: false });
+        ok = true;
+      } else if (state.db) {
+        await state.db.doc("events/" + id).set(body);
+        ok = true;
+      } else err = "연결이 없어요";
+    } catch (e) {
+      err = e && e.code ? ({ needs_reauth: "GitHub 커넥터를 다시 연결해 주세요", server_not_connected: "GitHub 커넥터가 없어요", approval_required: "승인이 필요해요. 다시 눌러 주세요", not_in_manifest: "이 페이지에 GitHub 쓰기 권한이 없어요" }[e.code] || e.code) : String(e);
+      if (state.db && state.source === "github") { try { await state.db.doc("events/" + id).set(Object.assign(body, { via: "db-fallback" })); ok = true; err = null; } catch (e2) {} }
+    }
+    state.busy.delete(busyKey);
+    if (!ok) toast("저장 실패: " + err);
+    return ok;
+  }
+
+  // ---------- data: 읽기 ----------
+  function parseGithubFile(r) {
+    let text = null;
+    for (const b of (r && r.content) || []) {
+      if (b && b.resource && typeof b.resource.text === "string") text = b.resource.text;
+      else if (b && b.type === "text" && typeof b.text === "string" && !text && /^\s*[{\[]/.test(b.text)) text = b.text;
+    }
+    if (!text && r && r.payload && typeof r.payload === "object") return r.payload;
+    if (!text && typeof (r && r.payload) === "string" && /^\s*[{\[]/.test(r.payload)) text = r.payload;
+    if (!text) throw new Error("no-json");
+    return JSON.parse(text);
+  }
+  async function loadFromGithub(force) {
+    const r = await state.mcp.callTool(GH.server, "get_file_contents", { owner: GH.owner, repo: GH.repo, path: GH.dataPath, ref: "refs/heads/" + GH.branch }, { cache: force ? { refresh: true, staleTime: 0, gcTime: 60000 } : { staleTime: 0, gcTime: 60000 } });
+    return parseGithubFile(r);
+  }
+  async function load(force) {
+    state.source = state.data ? state.source : "loading"; state.error = null; render();
+    if (state.mcp) {
+      try { const d = await loadFromGithub(force); if (d && d.generated_at) { state.data = d; state.source = "github"; state.local = {}; state.fetchedAt = nowIso(); render(); return; } }
+      catch (e) { state.error = e && e.code ? e.code : "parse"; }
+    }
+    if (state.db) {
+      try { const snap = await state.db.doc("app/data").get(); if (snap.exists) { state.data = snap.data(); state.source = "db"; state.local = {}; render(); return; } }
+      catch (e) {}
+      state.source = "db"; render(); return; // db 연결은 있으나 사본이 아직 없음
+    }
+    state.source = "none"; render();
+  }
   async function boot() {
     render();
-    const db = window.claude && window.claude.use ? await window.claude.use("db") : null;
-    if (!db) { state.dbState = "none"; render(); return; }
-    state.db = db; state.dbState = "ready";
-    const onErr = (e) => { if (e && e.code === "revoked") { state.dbState = "none"; render(); } };
-    db.doc("profile/current").onSnapshot((snap) => { state.profile = snap.exists ? snap.data() : null; render(); }, onErr);
-    db.collection("suggestions").orderBy("created_at", "desc").limit(60).onSnapshot((q) => { state.suggestions = q.docs.map((d) => Object.assign({ id: d.id }, d.data())); render(); }, onErr);
-    db.collection("briefs").orderBy("date", "desc").limit(7).onSnapshot((q) => { state.briefs = q.docs.map((d) => d.data()); render(); }, onErr);
-    db.collection("logs").orderBy("at", "desc").limit(30).onSnapshot((q) => { state.logs = q.docs.map((d) => d.data()); render(); }, onErr);
-    db.collection("feedback").orderBy("at", "desc").limit(200).onSnapshot((q) => {
-      const fb = {}; for (const d of q.docs.slice().reverse()) { const x = d.data(); fb[x.profile_id] = { verdict: x.verdict }; }
-      state.feedback = fb; render();
-    }, onErr);
-    render();
+    const use = (n) => (window.claude && window.claude.use ? window.claude.use(n) : Promise.resolve(null));
+    const [mcp, db] = await Promise.all([use("mcp"), use("db")]);
+    state.mcp = mcp; state.db = db;
+    if (db) {
+      db.collection("briefs").orderBy("date", "desc").limit(7).onSnapshot((q) => { state.briefs = q.docs.map((x) => x.data()); render(); }, () => {});
+    }
+    await load(false);
   }
   boot();
 })();
