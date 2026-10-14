@@ -1,0 +1,131 @@
+# 두뇌 목록. API 키가 없는 provider의 모델은 자동으로 빠진다.
+# 모든 두뇌는 OpenAI 호환 스트리밍 API로 통일되어 있어 아래 형식으로 얼마든지 추가할 수 있다.
+#
+# tiers: fast(짧은 잡담, 기억 정리) / smart(생각이 필요한 질문, 회고)
+# priority: 작을수록 선호 (같은 tier 안에서)
+# expected_ttft: 처음 쓸 때 예상 첫 응답 시간(초). 이후엔 실제 측정값으로 자동 학습.
+# 모델 이름은 provider 사정으로 바뀔 수 있다. `python -m app.main check` 로 전부 점검 가능.
+
+[providers.pc]          # 주인 PC (PC 에이전트가 연결되어 있을 때만 사용)
+type = "pc"
+key_env = "PC_TOKEN"
+
+[providers.groq]        # 무료, 매우 빠름 (LPU)
+base_url = "https://api.groq.com/openai/v1"
+key_env = "GROQ_API_KEY"
+
+[providers.cerebras]    # 무료, 매우 빠름 (웨이퍼 스케일 칩)
+base_url = "https://api.cerebras.ai/v1"
+key_env = "CEREBRAS_API_KEY"
+
+[providers.gemini]      # 무료 (무료 플랜은 입력이 Google 학습에 쓰일 수 있음)
+base_url = "https://generativelanguage.googleapis.com/v1beta/openai"
+key_env = "GEMINI_API_KEY"
+trains_on_data = true
+
+[providers.openrouter]  # 무료 모델 다수 (":free" 접미사)
+base_url = "https://openrouter.ai/api/v1"
+key_env = "OPENROUTER_API_KEY"
+
+[providers.anthropic]   # 선택 사항. Claude (유료, 사용량만큼 과금). 키를 넣으면 가장 똑똑한 두뇌로 쓰임
+base_url = "https://api.anthropic.com/v1"
+key_env = "ANTHROPIC_API_KEY"
+
+[providers.local]       # 서버에서 직접 돌리는 자체 두뇌 (llama.cpp). 외부가 전부 막혀도 동작
+base_url_env = "LOCAL_LLM_URL"
+
+# ---------------- PC (연결되어 있으면 최우선: 빠르고 대화가 외부로 나가지 않음)
+[[models]]
+id = "pc"
+provider = "pc"
+model = "local"            # 실제 모델은 PC 에이전트의 --model 로 정해진다
+tiers = ["fast", "smart"]
+priority = 0
+expected_ttft = 0.4
+
+# ---------------- fast
+[[models]]
+id = "groq-llama-8b"
+provider = "groq"
+model = "llama-3.1-8b-instant"
+tiers = ["fast"]
+priority = 1
+expected_ttft = 0.2
+
+[[models]]
+id = "cerebras-llama-8b"
+provider = "cerebras"
+model = "llama3.1-8b"
+tiers = ["fast"]
+priority = 1
+expected_ttft = 0.2
+
+[[models]]
+id = "gemini-flash-lite"
+provider = "gemini"
+model = "gemini-2.5-flash-lite"
+tiers = ["fast"]
+priority = 2
+expected_ttft = 0.5
+params = { reasoning_effort = "none" }
+
+# ---------------- smart
+[[models]]
+id = "claude-sonnet"
+provider = "anthropic"
+model = "claude-sonnet-5-5"
+tiers = ["smart"]
+priority = 0
+expected_ttft = 0.8
+
+[[models]]
+id = "cerebras-gpt-oss-120b"
+provider = "cerebras"
+model = "gpt-oss-120b"
+tiers = ["smart"]
+priority = 1
+expected_ttft = 0.4
+params = { reasoning_effort = "low" }
+
+[[models]]
+id = "groq-gpt-oss-120b"
+provider = "groq"
+model = "openai/gpt-oss-120b"
+tiers = ["smart"]
+priority = 1
+expected_ttft = 0.4
+params = { reasoning_effort = "low" }
+
+[[models]]
+id = "groq-llama-70b"
+provider = "groq"
+model = "llama-3.3-70b-versatile"
+tiers = ["smart"]
+priority = 2
+expected_ttft = 0.3
+
+[[models]]
+id = "gemini-flash"
+provider = "gemini"
+model = "gemini-2.5-flash"
+tiers = ["smart"]
+priority = 2
+expected_ttft = 0.7
+params = { reasoning_effort = "none" }
+
+[[models]]
+id = "openrouter-llama-70b"
+provider = "openrouter"
+model = "meta-llama/llama-3.3-70b-instruct:free"
+tiers = ["smart"]
+priority = 4
+expected_ttft = 1.5
+
+# ---------------- 최후의 보루: 자체 두뇌 (CPU라 느리지만 항상 살아있음)
+[[models]]
+id = "local"
+provider = "local"
+model = "local"
+tiers = ["fast", "smart"]
+priority = 6
+expected_ttft = 3.0

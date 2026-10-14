@@ -1,0 +1,15 @@
+# 첫 실행 때 통째로 읽어 기억에 넣을 공개 문서 (한 줄에 하나, 주소만 추가하면 됨).
+# 이미 넣은 문서는 다시 읽지 않는다. 주소가 바뀌면 고쳐주면 된다.
+
+# Anthropic이 공개한 Claude 관련 자료
+https://www.anthropic.com/constitution
+https://docs.claude.com/en/release-notes/system-prompts
+https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/overview
+https://docs.claude.com/en/docs/build-with-claude/prompt-engineering/claude-4-best-practices
+https://www.anthropic.com/engineering/building-effective-agents
+https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
+
+# AI 기초 개념
+https://en.wikipedia.org/wiki/Large_language_model
+https://en.wikipedia.org/wiki/Retrieval-augmented_generation
+https://en.wikipedia.org/wiki/Transformer_(deep_learning_architecture)

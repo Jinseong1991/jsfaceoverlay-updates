@@ -1,0 +1,23 @@
+# 처음 시작할 때 스스로 공부할 기술 주제. 다 공부하면 읽으면서 생긴 새 궁금증으로 이어간다.
+대규모 언어 모델
+검색 증강 생성
+AI 에이전트
+Model Context Protocol
+벡터 데이터베이스
+양자화 (딥러닝)
+LoRA (machine learning)
+Mixture of experts
+트랜스포머 (기계 학습)
+확산 모델
+강화 학습
+멀티모달 학습
+WebAssembly
+Rust (프로그래밍 언어)
+쿠버네티스
+서버리스 컴퓨팅
+엣지 컴퓨팅
+CRDT
+eBPF
+패스키
+영지식 증명
+양자 컴퓨터

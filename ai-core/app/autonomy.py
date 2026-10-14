@@ -50,6 +50,7 @@ class Autonomy:
         self.learner = learner
         self.notify = notify
         self.jobs: dict[str, tuple[float, Callable[[], Awaitable[object]]]] = {
+            "ingest": (600, self.ingest),
             "learn": (settings.learn_interval_h * 3600, self.learn),
             "reflect": (settings.reflect_interval_h * 3600, self.reflect),
             "repair": (3600, self.repair_embeddings),
@@ -73,5 +74,69 @@ class Autonomy:
                 log.exception("자율 작업 %s 실패", name)
         return ran
 
+    async def ingest(self) -> int:
+        return await self.learner.ingest_sources(self.learner.sources)
+
     async def learn(self) -> int:
         return await self.learner.run_cycle()
+
+    def _quiet_now(self) -> bool:
+        if not self.settings.quiet_hours:
+            return False
+        start, end = self.settings.quiet_hours
+        hour = self.brain.persona.now().hour
+        return start <= hour < end if start <= end else (hour >= start or hour < end)
+
+    async def reflect(self) -> None:
+        store = self.brain.store
+        msgs = await store.recent_messages(30)
+        knowledge = await store.recent_memories("knowledge", 8)
+        notes = await store.kv_get("self_notes", "")
+        curiosities = await store.kv_get("curiosities", [])
+        directives = await self.brain.directives()
+        prompt = REFLECT_PROMPT.format(
+            name=self.brain.persona.name,
+            directives=format_directives(directives) or "(주인의 지시 없음)",
+            notes=notes or "(아직 없음)",
+            chat="\n".join(f"{'주인' if m['role'] == 'user' else '나'}: {m['content'][:300]}" for m in msgs) or "(없음)",
+            knowledge="\n".join(f"- {k.content[:300]}" for k in knowledge) or "(없음)",
+            curiosities=", ".join(curiosities) or "(없음)",
+        )
+        data = await self.brain.router.complete_json(
+            [{"role": "system", "content": self.brain.persona.core}, {"role": "user", "content": prompt}],
+            "smart", default=None, private=self.brain.private, temperature=0.7)
+        if not isinstance(data, dict):
+            log.warning("회고 결과를 해석하지 못함")
+            return
+        if data.get("journal"):
+            await self.brain.remember("journal", str(data["journal"]), 0.5)
+        if data.get("self_notes"):
+            await store.kv_set("self_notes", str(data["self_notes"])[:2000])
+        if isinstance(data.get("curiosities"), list):
+            merged = [str(c) for c in data["curiosities"] if str(c).strip()]
+            merged += [c for c in curiosities if c not in merged]
+            await store.kv_set("curiosities", merged[:20])
+        message = data.get("message_to_owner")
+        if message and self.notify:
+            await self.maybe_message_owner(str(message))
+
+    async def maybe_message_owner(self, message: str) -> bool:
+        store = self.brain.store
+        last = await store.kv_get("last_proactive", 0)
+        if self._quiet_now() or time.time() - last < self.settings.proactive_min_gap_h * 3600:
+            return False
+        if self.notify and await self.notify(message):
+            await store.kv_set("last_proactive", time.time())
+            await store.add_message("assistant", message, "proactive")
+            return True
+        return False
+
+    async def repair_embeddings(self) -> int:
+        """임베딩 계산에 실패했던 기억을 다시 계산한다."""
+        missing = await self.brain.store.missing_embeddings(50)
+        if not missing:
+            return 0
+        vectors = await self.brain.embedder.embed([m.content for m in missing])
+        for m, v in zip(missing, vectors):
+            await self.brain.store.set_embedding(m.id, v)
+        return len(missing)

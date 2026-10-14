@@ -94,7 +94,8 @@ class Brain:
     async def recall(self, text: str, k: int = 6, kinds: list[str] | None = None) -> list[Memory]:
         try:
             emb = await asyncio.wait_for(self.embedder.embed_one(text, query=True), RECALL_TIMEOUT)
-            return await asyncio.wait_for(self.store.search(emb, k=k, kinds=kinds, min_similarity=0.25),
+            return await asyncio.wait_for(self.store.search(emb, k=k, kinds=kinds,
+                                                            min_similarity=self.embedder.min_similarity),
                                           RECALL_TIMEOUT)
         except Exception as e:  # noqa: BLE001 - 기억이 늦으면 기억 없이 바로 대답 (속도 우선)
             log.info("기억 떠올리기 건너뜀: %s", e)

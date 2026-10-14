@@ -78,10 +78,13 @@ def html_to_text(html: str, limit: int = 6000) -> str:
 
 
 class Learner:
-    def __init__(self, brain: "Brain", client: httpx.AsyncClient, feeds: list[str]) -> None:
+    def __init__(self, brain: "Brain", client: httpx.AsyncClient, feeds: list[str],
+                 seed_topics: list[str] | None = None, sources: list[str] | None = None) -> None:
         self.brain = brain
         self.client = client
         self.feeds = feeds
+        self.seed_topics = seed_topics or []
+        self.sources = sources or []
 
     async def _get(self, url: str, **kw) -> httpx.Response:
         r = await self.client.get(url, headers={"User-Agent": UA}, timeout=15, follow_redirects=True, **kw)
@@ -155,9 +158,50 @@ class Learner:
                                   {"url": item.url, "title": item.title, "source": item.source})
         return [str(q) for q in data.get("questions") or [] if str(q).strip()]
 
+    async def ingest_url(self, url: str, chunk_chars: int = 1500, max_chunks: int = 40) -> int:
+        """공개 문서를 통째로 읽어 조각내어 기억에 넣는다 (요약 없이 원문 그대로 → 모델 호출 비용 없음)."""
+        if await self.brain.store.has_source(url):
+            return 0
+        r = await self._get(url)
+        text = html_to_text(r.text, limit=chunk_chars * max_chunks) if "html" in r.headers.get(
+            "content-type", "") else r.text[: chunk_chars * max_chunks]
+        title_match = re.search(r"<title[^>]*>(.*?)</title>", r.text, re.IGNORECASE | re.DOTALL)
+        title = re.sub(r"\s+", " ", title_match.group(1)).strip() if title_match else url
+        chunks, buf = [], ""
+        for sentence in re.split(r"(?<=[.!?。다])\s+", text):
+            if len(buf) + len(sentence) > chunk_chars and buf:
+                chunks.append(buf.strip())
+                buf = ""
+            buf += sentence + " "
+        if buf.strip():
+            chunks.append(buf.strip())
+        for i, chunk in enumerate(chunks):
+            # 첫 조각의 url은 원본 주소 그대로 → has_source로 중복 입력 방지
+            src = url if i == 0 else f"{url}#part{i}"
+            await self.brain.remember("knowledge", f"[{title}]\n{chunk}", 0.6,
+                                      {"url": src, "title": title, "source": "ingest"})
+        log.info("문서 입력: %s (%d조각)", url, len(chunks))
+        return len(chunks)
+
+    async def ingest_sources(self, urls: list[str], per_run: int = 3) -> int:
+        done = 0
+        for url in urls:
+            if done >= per_run:
+                break
+            if await self.brain.store.has_source(url):
+                continue
+            try:
+                if await self.ingest_url(url):
+                    done += 1
+            except Exception as e:  # noqa: BLE001 - 주소가 바뀐 문서는 건너뜀
+                log.info("문서 입력 실패 %s: %s", url, e)
+        return done
+
     async def run_cycle(self, max_items: int = 4) -> int:
         store = self.brain.store
-        curiosities: list[str] = await store.kv_get("curiosities", [])
+        curiosities: list[str] | None = await store.kv_get("curiosities")
+        if curiosities is None:  # 맨 처음: 기본 기술 주제부터 공부
+            curiosities = list(self.seed_topics)
         candidates: list[Item] = []
 
         # 1) 스스로 궁금해하던 주제
@@ -184,6 +228,6 @@ class Learner:
             for q in questions:
                 if q not in curiosities:
                     curiosities.append(q)
-        await store.kv_set("curiosities", curiosities[-MAX_CURIOSITIES:])
+        await store.kv_set("curiosities", curiosities[:MAX_CURIOSITIES * 2])
         log.info("학습 완료: %d개", learned)
         return learned

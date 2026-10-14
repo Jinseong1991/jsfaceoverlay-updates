@@ -21,6 +21,7 @@ def normalize(v: np.ndarray) -> np.ndarray:
 
 class Embedder:
     name = "base"
+    min_similarity = 0.25  # 이보다 덜 비슷한 기억은 떠올리지 않음
 
     def __init__(self, dim: int) -> None:
         self.dim = dim
@@ -34,6 +35,7 @@ class Embedder:
 
 class HashEmbedder(Embedder):
     name = "hash"
+    min_similarity = 0.1  # 글자 해싱은 유사도 값이 전반적으로 낮다
 
     async def embed(self, texts: list[str], *, query: bool = False) -> list[np.ndarray]:
         return [self._one(t) for t in texts]

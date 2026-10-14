@@ -31,6 +31,12 @@ class Provider:
     base_url: str
     api_key: str | None = None
     trains_on_data: bool = False
+    bridge: Any = None  # PC 브리지 (type = "pc")
+    kind: str = "http"
+
+    @property
+    def available(self) -> bool:
+        return self.kind != "pc" or (self.bridge is not None and self.bridge.connected)
 
 
 @dataclass
@@ -75,6 +81,10 @@ def load_models(path: Path, env: dict[str, str] | None = None) -> list[ModelSpec
     data = tomllib.loads(path.read_text(encoding="utf-8"))
     providers: dict[str, Provider] = {}
     for name, cfg in data.get("providers", {}).items():
+        if cfg.get("type") == "pc":
+            if env.get(cfg.get("key_env", "PC_TOKEN")):
+                providers[name] = Provider(name, "pc://", kind="pc")
+            continue
         base_url = cfg.get("base_url") or env.get(cfg.get("base_url_env", ""), "")
         if not base_url:
             continue
@@ -196,7 +206,8 @@ class Router:
         return ttft + 0.3 * m.priority
 
     def candidates(self, tier: str, private: bool = False) -> list[ModelSpec]:
-        eligible = [m for m in self.models if not (private and m.provider.trains_on_data)]
+        eligible = [m for m in self.models
+                    if m.provider.available and not (private and m.provider.trains_on_data)]
         now = self.clock()
         ready = [m for m in eligible if self.state[m.id].cooldown_until <= now]
         primary = sorted((m for m in ready if tier in m.tiers), key=self._estimate)
@@ -251,6 +262,16 @@ class Router:
     # ---------- 실제 호출 ----------
 
     async def _stream_one(self, m: ModelSpec, payload: dict[str, Any]) -> AsyncIterator[str]:
+        if m.provider.kind == "pc":
+            stripper = ThinkStripper()
+            async for tok in m.provider.bridge.stream({**payload, **m.params, "model": m.model, "stream": True}):
+                visible = stripper.feed(tok)
+                if visible:
+                    yield visible
+            tail = stripper.flush()
+            if tail:
+                yield tail
+            return
         headers = {"Content-Type": "application/json"}
         if m.provider.api_key:
             headers["Authorization"] = f"Bearer {m.provider.api_key}"

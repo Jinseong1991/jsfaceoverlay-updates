@@ -54,8 +54,14 @@ def _quiet_hours(value: str | None) -> tuple[int, int] | None:
 
 
 DEFAULT_FEEDS = ",".join([
-    "https://hnrss.org/frontpage",
-    "https://export.arxiv.org/rss/cs.AI",
+    # 기술
+    "https://news.hada.io/rss/news",          # GeekNews (한국어 기술 뉴스)
+    "https://hnrss.org/frontpage",            # Hacker News
+    "https://export.arxiv.org/rss/cs.AI",     # 최신 AI 논문
+    "https://export.arxiv.org/rss/cs.CL",     # 언어 모델 논문
+    "https://export.arxiv.org/rss/cs.LG",     # 머신러닝 논문
+    "https://github.blog/changelog/feed/",    # 개발 도구 변화
+    # 세상 소식
     "https://feeds.bbci.co.uk/news/world/rss.xml",
     "https://www.yna.co.kr/rss/news.xml",
 ])
@@ -84,6 +90,8 @@ class Settings:
     reflect_interval_h: float
     proactive_min_gap_h: float
     persona_path: Path
+    seed_topics_path: Path
+    sources_path: Path
     models_path: Path
     feeds: list[str] = field(default_factory=list)
 
@@ -116,6 +124,8 @@ class Settings:
             reflect_interval_h=_float("REFLECT_INTERVAL_HOURS", 12),
             proactive_min_gap_h=_float("PROACTIVE_MIN_GAP_HOURS", 8),
             persona_path=Path(_env("PERSONA_PATH", str(ROOT / "config" / "persona.md"))),
+            seed_topics_path=Path(_env("SEED_TOPICS_PATH", str(ROOT / "config" / "seed_topics.txt"))),
+            sources_path=Path(_env("KNOWLEDGE_SOURCES_PATH", str(ROOT / "config" / "knowledge_sources.txt"))),
             models_path=Path(_env("MODELS_PATH", str(ROOT / "config" / "models.toml"))),
             feeds=_list("LEARN_FEEDS", DEFAULT_FEEDS),
         )
