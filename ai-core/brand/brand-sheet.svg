@@ -1,118 +1,112 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 960" width="1280" height="960">
   <rect width="1280" height="960" fill="#FAFAF9"/>
-  <text x="80" y="96" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="700" font-size="44" fill="#1E1B4B">Jinyu Brand</text>
-  <text x="80" y="136" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="22" fill="#78716C">진성의 '진' + 자유(Freedom)의 '유' — 날개 달린 J가 해를 향해 날아오른다</text>
+  <text x="80" y="96" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="700" font-size="44" fill="#0F0C2E">Jinyu Brand</text>
+  <text x="80" y="136" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="22" fill="#78716C">진성의 '진' + 자유(Freedom)의 '유' — J의 획이 그대로 날개가 되어 해를 향해 날아오른다</text>
   <svg x="80" y="190" width="360" height="360" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="ssky" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#1E1B4B"/>
-      <stop offset="0.55" stop-color="#3730A3"/>
-      <stop offset="1" stop-color="#0EA5E9"/>
+    <linearGradient id="sbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0F0C2E"/>
+      <stop offset="0.6" stop-color="#25236E"/>
+      <stop offset="1" stop-color="#1667A8"/>
     </linearGradient>
-    <radialGradient id="sglow" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="#FDE68A" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#FDE68A" stop-opacity="0"/>
+    <radialGradient id="slight" cx="0.78" cy="0.22" r="0.6">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="swing" x1="1" y1="1" x2="0" y2="0">
+    <linearGradient id="sblade" x1="1" y1="1" x2="0" y2="0">
       <stop offset="0" stop-color="#FFFFFF"/>
-      <stop offset="1" stop-color="#99F6E4"/>
+      <stop offset="1" stop-color="#8FF0DD"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" rx="112" fill="url(#ssky)"/>
-  <circle cx="384" cy="132" r="80" fill="url(#sglow)"/>
-  <circle cx="384" cy="132" r="30" fill="#FBBF24"/>
-  <path d="M 300 205 L 300 318 A 82 82 0 0 1 136 318" fill="none" stroke="#FFFFFF" stroke-width="58" stroke-linecap="round"/>
-  <path fill="url(#swing)" d="M 329 248
-    C 318 150, 236 70, 96 52
-    Q 100 128, 150 132
-    Q 150 180, 202 180
-    Q 210 222, 256 218
-    Q 276 252, 329 248 Z"/>
+  <rect width="512" height="512" rx="112" fill="url(#sbg)"/>
+  <rect width="512" height="512" rx="112" fill="url(#slight)"/>
+  <g transform="translate(18 18)">
+    <path d="M 300 250 L 300 318 A 76 76 0 0 1 148 318" fill="none" stroke="#FFFFFF" stroke-width="44" stroke-linecap="round"/>
+    <path fill="#4FD1C5" d="M 280 262 C 266 226, 220 196, 146 190 C 216 166, 292 190, 320 262 Z"/>
+    <path fill="url(#sblade)" d="M 278 262 C 272 190, 214 122, 116 88 C 236 102, 318 160, 322 262 Z"/>
+  </g>
+  <circle cx="390" cy="128" r="22" fill="#FBBF24"/>
 </svg>
   <rect x="490" y="190" width="710" height="170" rx="28" fill="#FFFFFF" stroke="#E7E5E4"/>
   <svg x="500" y="200" width="690" height="150" viewBox="0 0 1200 400">
   
   <svg x="70" y="60" width="280" height="280" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="lsky" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#1E1B4B"/>
-      <stop offset="0.55" stop-color="#3730A3"/>
-      <stop offset="1" stop-color="#0EA5E9"/>
+    <linearGradient id="lbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0F0C2E"/>
+      <stop offset="0.6" stop-color="#25236E"/>
+      <stop offset="1" stop-color="#1667A8"/>
     </linearGradient>
-    <radialGradient id="lglow" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="#FDE68A" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#FDE68A" stop-opacity="0"/>
+    <radialGradient id="llight" cx="0.78" cy="0.22" r="0.6">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="lwing" x1="1" y1="1" x2="0" y2="0">
+    <linearGradient id="lblade" x1="1" y1="1" x2="0" y2="0">
       <stop offset="0" stop-color="#FFFFFF"/>
-      <stop offset="1" stop-color="#99F6E4"/>
+      <stop offset="1" stop-color="#8FF0DD"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" rx="112" fill="url(#lsky)"/>
-  <circle cx="384" cy="132" r="80" fill="url(#lglow)"/>
-  <circle cx="384" cy="132" r="30" fill="#FBBF24"/>
-  <path d="M 300 205 L 300 318 A 82 82 0 0 1 136 318" fill="none" stroke="#FFFFFF" stroke-width="58" stroke-linecap="round"/>
-  <path fill="url(#lwing)" d="M 329 248
-    C 318 150, 236 70, 96 52
-    Q 100 128, 150 132
-    Q 150 180, 202 180
-    Q 210 222, 256 218
-    Q 276 252, 329 248 Z"/>
+  <rect width="512" height="512" rx="112" fill="url(#lbg)"/>
+  <rect width="512" height="512" rx="112" fill="url(#llight)"/>
+  <g transform="translate(18 18)">
+    <path d="M 300 250 L 300 318 A 76 76 0 0 1 148 318" fill="none" stroke="#FFFFFF" stroke-width="44" stroke-linecap="round"/>
+    <path fill="#4FD1C5" d="M 280 262 C 266 226, 220 196, 146 190 C 216 166, 292 190, 320 262 Z"/>
+    <path fill="url(#lblade)" d="M 278 262 C 272 190, 214 122, 116 88 C 236 102, 318 160, 322 262 Z"/>
+  </g>
+  <circle cx="390" cy="128" r="22" fill="#FBBF24"/>
 </svg>
-  <text x="400" y="232" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="700" font-size="168" letter-spacing="-4" fill="#1E1B4B">Jinyu</text>
-  <text x="406" y="300" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="34" letter-spacing="9" fill="#0EA5E9">FREEDOM · BY JINSEONG</text>
+  <text x="400" y="232" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="164" letter-spacing="-5" fill="#1E1B4B">Jinyu</text>
+  <text x="406" y="300" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="500" font-size="28" letter-spacing="12" fill="#1667A8">FREEDOM  ·  BY JINSEONG</text>
 </svg>
-  <rect x="490" y="380" width="710" height="170" rx="28" fill="#14123A"/>
+  <rect x="490" y="380" width="710" height="170" rx="28" fill="#0F0C2E"/>
   <svg x="500" y="390" width="690" height="150" viewBox="0 0 1200 400">
-  <rect width="1200" height="400" fill="#14123A"/>
+  <rect width="1200" height="400" fill="#0F0C2E"/>
   <svg x="70" y="60" width="280" height="280" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="dsky" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#1E1B4B"/>
-      <stop offset="0.55" stop-color="#3730A3"/>
-      <stop offset="1" stop-color="#0EA5E9"/>
+    <linearGradient id="dbg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0F0C2E"/>
+      <stop offset="0.6" stop-color="#25236E"/>
+      <stop offset="1" stop-color="#1667A8"/>
     </linearGradient>
-    <radialGradient id="dglow" cx="0.5" cy="0.5" r="0.5">
-      <stop offset="0" stop-color="#FDE68A" stop-opacity="0.9"/>
-      <stop offset="1" stop-color="#FDE68A" stop-opacity="0"/>
+    <radialGradient id="dlight" cx="0.78" cy="0.22" r="0.6">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="dwing" x1="1" y1="1" x2="0" y2="0">
+    <linearGradient id="dblade" x1="1" y1="1" x2="0" y2="0">
       <stop offset="0" stop-color="#FFFFFF"/>
-      <stop offset="1" stop-color="#99F6E4"/>
+      <stop offset="1" stop-color="#8FF0DD"/>
     </linearGradient>
   </defs>
-  <rect width="512" height="512" rx="112" fill="url(#dsky)"/>
-  <circle cx="384" cy="132" r="80" fill="url(#dglow)"/>
-  <circle cx="384" cy="132" r="30" fill="#FBBF24"/>
-  <path d="M 300 205 L 300 318 A 82 82 0 0 1 136 318" fill="none" stroke="#FFFFFF" stroke-width="58" stroke-linecap="round"/>
-  <path fill="url(#dwing)" d="M 329 248
-    C 318 150, 236 70, 96 52
-    Q 100 128, 150 132
-    Q 150 180, 202 180
-    Q 210 222, 256 218
-    Q 276 252, 329 248 Z"/>
+  <rect width="512" height="512" rx="112" fill="url(#dbg)"/>
+  <rect width="512" height="512" rx="112" fill="url(#dlight)"/>
+  <g transform="translate(18 18)">
+    <path d="M 300 250 L 300 318 A 76 76 0 0 1 148 318" fill="none" stroke="#FFFFFF" stroke-width="44" stroke-linecap="round"/>
+    <path fill="#4FD1C5" d="M 280 262 C 266 226, 220 196, 146 190 C 216 166, 292 190, 320 262 Z"/>
+    <path fill="url(#dblade)" d="M 278 262 C 272 190, 214 122, 116 88 C 236 102, 318 160, 322 262 Z"/>
+  </g>
+  <circle cx="390" cy="128" r="22" fill="#FBBF24"/>
 </svg>
-  <text x="400" y="232" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="700" font-size="168" letter-spacing="-4" fill="#FFFFFF">Jinyu</text>
-  <text x="406" y="300" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="34" letter-spacing="9" fill="#99F6E4">FREEDOM · BY JINSEONG</text>
+  <text x="400" y="232" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="164" letter-spacing="-5" fill="#FFFFFF">Jinyu</text>
+  <text x="406" y="300" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="500" font-size="28" letter-spacing="12" fill="#8FF0DD">FREEDOM  ·  BY JINSEONG</text>
 </svg>
   <text x="80" y="610" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="26" fill="#1E1B4B">Color · 새벽하늘에서 날아오르는 순간</text>
-  <rect x="80" y="640" width="160" height="160" rx="24" fill="#1E1B4B"/>
-  <text x="80" y="836" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="22" fill="#1E1B4B">Midnight Indigo</text>
-  <text x="80" y="864" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#78716C">#1E1B4B</text>
-  <text x="80" y="892" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="19" fill="#78716C">깊은 밤하늘, 시작</text><rect x="270" y="640" width="160" height="160" rx="24" fill="#3730A3"/>
-  <text x="270" y="836" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="22" fill="#1E1B4B">Deep Violet</text>
-  <text x="270" y="864" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#78716C">#3730A3</text>
-  <text x="270" y="892" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="19" fill="#78716C">생각의 깊이</text><rect x="460" y="640" width="160" height="160" rx="24" fill="#0EA5E9"/>
+  <rect x="80" y="640" width="160" height="160" rx="24" fill="#0F0C2E"/>
+  <text x="80" y="836" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="22" fill="#1E1B4B">Midnight</text>
+  <text x="80" y="864" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#78716C">#0F0C2E</text>
+  <text x="80" y="892" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="19" fill="#78716C">깊은 밤, 시작</text><rect x="270" y="640" width="160" height="160" rx="24" fill="#25236E"/>
+  <text x="270" y="836" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="22" fill="#1E1B4B">Indigo Dusk</text>
+  <text x="270" y="864" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#78716C">#25236E</text>
+  <text x="270" y="892" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="19" fill="#78716C">생각의 깊이</text><rect x="460" y="640" width="160" height="160" rx="24" fill="#1667A8"/>
   <text x="460" y="836" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="22" fill="#1E1B4B">Open Sky</text>
-  <text x="460" y="864" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#78716C">#0EA5E9</text>
-  <text x="460" y="892" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="19" fill="#78716C">자유, 열린 하늘</text><rect x="650" y="640" width="160" height="160" rx="24" fill="#99F6E4"/>
+  <text x="460" y="864" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#78716C">#1667A8</text>
+  <text x="460" y="892" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="19" fill="#78716C">자유, 열린 하늘</text><rect x="650" y="640" width="160" height="160" rx="24" fill="#8FF0DD"/>
   <text x="650" y="836" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="22" fill="#1E1B4B">Aurora Mint</text>
-  <text x="650" y="864" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#78716C">#99F6E4</text>
-  <text x="650" y="892" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="19" fill="#78716C">날개, 가벼움</text><rect x="840" y="640" width="160" height="160" rx="24" fill="#FBBF24"/>
-  <text x="840" y="836" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="22" fill="#1E1B4B">Sunrise Gold</text>
-  <text x="840" y="864" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#78716C">#FBBF24</text>
-  <text x="840" y="892" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="19" fill="#78716C">진(眞), 빛나는 중심</text><rect x="1030" y="640" width="160" height="160" rx="24" fill="#FFFFFF" stroke="#D6D3D1"/>
-  <text x="1030" y="836" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="22" fill="#1E1B4B">Cloud White</text>
-  <text x="1030" y="864" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#78716C">#FFFFFF</text>
-  <text x="1030" y="892" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="19" fill="#78716C">순수, 여백</text>
+  <text x="650" y="864" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#78716C">#8FF0DD</text>
+  <text x="650" y="892" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="19" fill="#78716C">날개, 가벼움</text><rect x="840" y="640" width="160" height="160" rx="24" fill="#4FD1C5"/>
+  <text x="840" y="836" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="22" fill="#1E1B4B">Wing Teal</text>
+  <text x="840" y="864" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#78716C">#4FD1C5</text>
+  <text x="840" y="892" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="19" fill="#78716C">비상, 움직임</text><rect x="1030" y="640" width="160" height="160" rx="24" fill="#FBBF24"/>
+  <text x="1030" y="836" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="22" fill="#1E1B4B">Sunrise Gold</text>
+  <text x="1030" y="864" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="20" fill="#78716C">#FBBF24</text>
+  <text x="1030" y="892" font-family="WenQuanYi Zen Hei, Inter Display, Inter, Helvetica, Arial, sans-serif" font-size="19" fill="#78716C">진(眞), 빛나는 중심</text>
 </svg>
