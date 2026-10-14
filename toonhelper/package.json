@@ -1,0 +1,12 @@
+{
+  "name": "toonhelper",
+  "version": "1.0.0",
+  "description": "툰헬퍼 — 서버·API 없이 파일 하나로 동작하는 인스타툰 서포터 프로그램",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "test": "node --test test/engine.test.js",
+    "smoke": "node test/smoke.mjs"
+  },
+  "license": "UNLICENSED"
+}

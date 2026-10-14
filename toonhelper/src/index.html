@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>툰헬퍼 — 인스타툰 서포터</title>
+<meta name="description" content="소재 추천부터 콘티, 캐릭터, 시안 컷, 인스타 미리보기까지. 서버·API 없이 파일 하나로 동작하는 인스타툰 서포터 프로그램.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%235b4bd6'/%3E%3Ccircle cx='32' cy='30' r='16' fill='%23ffe6d5'/%3E%3Ccircle cx='26' cy='29' r='2.5' fill='%23222'/%3E%3Ccircle cx='38' cy='29' r='2.5' fill='%23222'/%3E%3Cpath d='M27 36q5 5 10 0' stroke='%23222' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="logo" aria-hidden="true"></span>
+    <div><h1>툰헬퍼</h1><small>인스타툰 서포터 · <span id="ver"></span></small></div>
+  </div>
+  <nav class="tabs" id="tabs" role="tablist">
+    <button data-tab="topic" class="on" role="tab">① 소재</button>
+    <button data-tab="story" role="tab">② 스토리</button>
+    <button data-tab="char" role="tab">③ 캐릭터</button>
+    <button data-tab="cut" role="tab">④ 시안</button>
+    <button data-tab="preview" role="tab">⑤ 미리보기</button>
+    <button data-tab="ai" role="tab">AI</button>
+    <button data-tab="settings" role="tab">설정·도움말</button>
+  </nav>
+  <div class="status" id="saveStatus" aria-live="polite">자동 저장 준비</div>
+</header>
+
+<main>
+<!-- ① 소재 -->
+<section class="tab on" id="tab-topic">
+  <div class="grid two">
+    <div class="card hero">
+      <div class="label">오늘 그릴 소재</div>
+      <div class="topic-text" id="topicText">아래 버튼을 눌러 소재를 뽑으세요.</div>
+      <div class="meta"><span class="badge" id="topicTone"></span> <span class="muted" id="topicId"></span></div>
+      <div class="btns">
+        <button class="primary big" id="bTopic">🎲 다시 뽑기</button>
+        <button id="bTopicCopy">복사</button>
+        <button id="bTopicFav">☆ 즐겨찾기</button>
+        <button class="accent" id="bTopicToStory">이 소재로 콘티 만들기 →</button>
+      </div>
+      <div class="muted small" id="topicCount"></div>
+    </div>
+    <div class="card">
+      <h2>슬롯 고정 <small class="muted">마음에 드는 값만 두고 나머지를 다시 뽑습니다</small></h2>
+      <div class="slots" id="slots"></div>
+      <div class="btns"><button id="bLockAll" class="ghost">현재 값 전부 고정</button><button id="bUnlockAll" class="ghost">전부 풀기</button></div>
+    </div>
+  </div>
+  <div class="grid three">
+    <div class="card">
+      <h2>내 소재 후보 추가 <small class="muted">내 경험을 넣을수록 반복이 사라집니다</small></h2>
+      <div class="row">
+        <select id="userSlotKey"></select>
+        <input id="userSlotText" placeholder="예: 퇴근길 지하철 환승 통로" maxlength="40">
+        <button id="bUserSlotAdd">추가</button>
+      </div>
+      <ul class="list" id="userSlotList"></ul>
+    </div>
+    <div class="card">
+      <h2>최근 뽑은 소재</h2>
+      <ul class="list" id="historyList"></ul>
+    </div>
+    <div class="card">
+      <h2>즐겨찾기</h2>
+      <ul class="list" id="favList"></ul>
+    </div>
+  </div>
+</section>
+
+<!-- ② 스토리 -->
+<section class="tab" id="tab-story">
+  <div class="card">
+    <div class="row wrap">
+      <div><div class="label">소재</div><div id="storyTopic" class="muted">먼저 소재를 뽑으세요.</div></div>
+      <div class="spacer"></div>
+      <div class="seg" id="cutsSeg">
+        <button data-cuts="4">4컷</button><button data-cuts="6">6컷</button><button data-cuts="8">8컷</button><button data-cuts="10">10컷</button>
+      </div>
+      <button class="primary" id="bStory">콘티 생성</button>
+      <button class="accent" id="bStoryToCut">시안으로 보내기 →</button>
+    </div>
+  </div>
+  <div class="beats" id="beats"></div>
+  <p class="muted small">컷 카드의 대사와 샷은 바로 고칠 수 있습니다. 샷(풀샷·바스트샷·클로즈업)은 시안 컷의 캐릭터 크기를 정합니다.</p>
+</section>
+
+<!-- ③ 캐릭터 -->
+<section class="tab" id="tab-char">
+  <div class="grid two wide-left">
+    <div class="card">
+      <div class="row wrap">
+        <h2>등장인물</h2><span class="muted small" id="partsCount"></span><div class="spacer"></div>
+        <button class="primary" id="bChars">🎲 8명 랜덤 생성</button>
+        <button id="bCharAdd">+ 한 명 추가</button>
+      </div>
+      <div class="chars" id="chars"></div>
+      <p class="muted small">클릭하면 편집 대상이 됩니다. ★ 주인공은 시안 컷에 등장하는 캐릭터입니다.</p>
+    </div>
+    <div class="card" id="charEditor">
+      <h2>캐릭터 편집</h2>
+      <div class="row"><input id="charName" placeholder="이름" maxlength="12"><button id="bCharMain" class="ghost">★ 주인공으로</button><button id="bCharDup" class="ghost">복제</button><button id="bCharDel" class="ghost danger">삭제</button></div>
+      <div class="editor-preview"><div id="charBig"></div><div class="exprs" id="charExprs"></div></div>
+      <div class="layers" id="charLayers"></div>
+      <div class="palettes" id="charPalettes"></div>
+      <div class="btns"><button id="bCharRandom">이 캐릭터만 다시 랜덤</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ④ 시안 -->
+<section class="tab" id="tab-cut">
+  <div class="card">
+    <div class="row wrap">
+      <button class="primary" id="bCutsFromStory">콘티에서 컷 자동 생성</button>
+      <div class="seg" id="ratioSeg"><button data-ratio="4:5">4:5</button><button data-ratio="1:1">1:1</button><button data-ratio="9:16">9:16</button></div>
+      <label class="chk"><input type="checkbox" id="cutGuide"> 안전 영역 가이드</label>
+      <label class="chk"><input type="checkbox" id="cutNumber"> 컷 번호 표시</label>
+      <div class="spacer"></div>
+      <button id="bCutPng">이 컷 PNG 저장</button>
+      <button id="bCutPngAll">전체 컷 PNG 저장</button>
+      <button class="accent" id="bCutToPreview">미리보기로 →</button>
+    </div>
+    <div class="strip" id="cutStrip"></div>
+  </div>
+  <div class="grid two wide-left" id="cutEditor">
+    <div class="card canvas-wrap"><canvas id="cv" width="1080" height="1350"></canvas><div class="muted small" id="cvInfo"></div></div>
+    <div class="card controls">
+      <h2>컷 <span id="cutNo"></span> <small class="muted" id="cutRole"></small></h2>
+      <div class="field"><label>배경</label><select id="cBg"></select></div>
+      <fieldset><legend>캐릭터</legend>
+        <div class="field"><label>등장</label><select id="cChar"></select></div>
+        <div class="field"><label>표정</label><select id="cExpr"></select></div>
+        <div class="field"><label>샷</label><select id="cShot"><option>풀샷</option><option>바스트샷</option><option>클로즈업</option><option>풀샷·침묵컷</option><option>표지</option></select></div>
+        <div class="field"><label>가로</label><input type="range" id="cX" min="100" max="980" step="10"></div>
+        <div class="field"><label>세로</label><input type="range" id="cY" min="200" max="1300" step="10"></div>
+        <div class="field"><label>크기</label><input type="range" id="cScale" min="0.4" max="3" step="0.05"></div>
+        <label class="chk"><input type="checkbox" id="cFlip"> 좌우 반전</label>
+      </fieldset>
+      <fieldset><legend>말풍선</legend>
+        <textarea id="cText" rows="2" placeholder="대사"></textarea>
+        <div class="field"><label>모양</label><select id="cStyle"><option value="round">둥근</option><option value="shout">외침</option><option value="think">생각</option><option value="none">글자만</option></select></div>
+        <div class="field"><label>가로</label><input type="range" id="cBx" min="20" max="700" step="10"></div>
+        <div class="field"><label>세로</label><input type="range" id="cBy" min="20" max="1200" step="10"></div>
+        <div class="field"><label>글자</label><input type="range" id="cFont" min="22" max="90" step="2"></div>
+        <label class="chk"><input type="checkbox" id="cTail"> 꼬리</label>
+      </fieldset>
+      <fieldset><legend>효과</legend>
+        <label class="chk"><input type="checkbox" id="cFxSpeed"> 집중선</label>
+        <label class="chk"><input type="checkbox" id="cFxSpark"> 반짝</label>
+        <label class="chk"><input type="checkbox" id="cFxSweat"> 땀</label>
+        <div class="field"><label>효과음</label><input id="cSfx" placeholder="헉! / 두근 / 띠용" maxlength="8"></div>
+        <div class="field"><label>효과음 크기</label><input type="range" id="cSfxSize" min="60" max="260" step="10"></div>
+      </fieldset>
+      <div class="field"><label>하단 캡션</label><input id="cCaption" placeholder="내레이션 (선택)"></div>
+      <div class="btns"><button id="bCutReset" class="ghost">이 컷 자동 배치로 되돌리기</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- ⑤ 미리보기 -->
+<section class="tab" id="tab-preview">
+  <div class="grid three">
+    <div class="card">
+      <div class="row wrap"><h2>게시물 미리보기</h2><div class="spacer"></div><button id="bPvRefresh" class="ghost">컷 새로고침</button></div>
+      <div class="row"><div class="seg" id="pvRatioSeg"><button data-ratio="4:5">4:5</button><button data-ratio="1:1">1:1</button><button data-ratio="9:16">9:16</button></div><input id="pvUser" placeholder="계정명" maxlength="30"></div>
+      <div class="ig-post">
+        <div class="ig-head"><span class="avatar" id="pvAvatar"></span><b id="pvUserName">my_toon</b></div>
+        <div class="ig-frame r45" id="pvFrame"><img id="pvImg" alt=""><button class="nav prev" id="pvPrev">‹</button><button class="nav next" id="pvNext">›</button><span class="count" id="pvCount"></span></div>
+        <div class="ig-dots" id="pvDots"></div>
+        <div class="ig-actions">♡ &nbsp; ○ &nbsp; ▷ <span class="right">⌂</span></div>
+        <div class="ig-caption"><b id="pvUserName2">my_toon</b> <span id="pvCaption"></span><a id="pvMore" hidden>… 더 보기</a></div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>프로필 그리드 <small class="muted">1:1 중앙 크롭 — 위아래가 잘리는지 확인</small></h2>
+      <div class="ig-feed" id="feed"></div>
+      <p class="muted small">파란 점선(시안 탭의 안전 영역 가이드)이 그리드에서 보이는 범위입니다. 얼굴과 글자는 그 안에 두세요.</p>
+    </div>
+    <div class="card">
+      <h2>캡션 검사</h2>
+      <textarea id="cap" rows="7" placeholder="첫 줄이 후킹 문장이 되게 쓰세요. 125자 이후는 '더 보기'로 접힙니다."></textarea>
+      <div class="capinfo" id="capInfo"></div>
+      <div class="btns"><button id="bHashtag" class="ghost"># 해시태그 추천</button><button id="bCapCopy" class="ghost">캡션 복사</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- AI -->
+<section class="tab" id="tab-ai">
+  <div class="card tip">툰헬퍼의 기본 기능은 AI 없이 전부 동작합니다. 여기서는 원할 때만 <b>프롬프트 복사</b>(비용 0) 또는 <b>내 API 키</b>(BYOK)로 생성형 AI를 더합니다.</div>
+  <div class="grid two">
+    <div class="card">
+      <h2>길 1 · 프롬프트 복사 모드</h2>
+      <div class="label">콘티 프롬프트</div>
+      <textarea id="aiStoryPrompt" rows="8" readonly></textarea>
+      <div class="btns"><button class="primary" id="bAiCopyStory">복사</button>
+        <a class="btn" href="https://chatgpt.com/" target="_blank" rel="noopener">ChatGPT 열기</a>
+        <a class="btn" href="https://claude.ai/new" target="_blank" rel="noopener">Claude 열기</a></div>
+      <div class="label">AI 응답 붙여넣기 → 콘티에 반영</div>
+      <textarea id="aiReply" rows="6" placeholder="1 | 도입 | 풀샷 | 오늘도 편의점. | 캐릭터 1명, 배경 1개&#10;2 | 전개 | 바스트샷 | ..."></textarea>
+      <div class="btns"><button id="bAiApply">콘티에 반영</button><span class="muted small" id="aiApplyMsg"></span></div>
+      <hr>
+      <div class="label">이미지 프롬프트 (주인공 캐릭터 시트 + 선택한 컷)</div>
+      <textarea id="aiImagePrompt" rows="5" readonly></textarea>
+      <div class="btns"><button id="bAiCopyImage">복사</button></div>
+    </div>
+    <div class="card">
+      <h2>길 2 · 내 API 키로 직접 호출 (BYOK)</h2>
+      <p class="muted small">키는 이 브라우저(localStorage)에만 저장되며 AI 서비스 외 어디에도 전송되지 않습니다. 키 발급: console.anthropic.com</p>
+      <div class="row"><input type="password" id="aiKey" placeholder="sk-ant-..."><button id="bAiKeySave">저장</button><button id="bAiKeyDel" class="ghost">삭제</button></div>
+      <div class="field"><label>모델</label><select id="aiModel"><option value="claude-sonnet-5-5">claude-sonnet-5-5</option><option value="claude-haiku-5-5">claude-haiku-5-5</option><option value="claude-opus-5-5">claude-opus-5-5</option></select></div>
+      <div class="btns"><button class="primary" id="bAiRun">AI로 콘티 다듬기</button><span class="muted small" id="aiStatus"></span></div>
+      <div class="label">결과</div>
+      <textarea id="aiResult" rows="10" readonly></textarea>
+      <div class="btns"><button id="bAiResultApply">콘티에 반영</button></div>
+      <p class="muted small">file:// 로 열었을 때 브라우저가 요청을 막으면 프롬프트 복사 모드를 쓰세요.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 설정·도움말 -->
+<section class="tab" id="tab-settings">
+  <div class="grid two">
+    <div class="card">
+      <h2>프로젝트</h2>
+      <p class="muted small">작업 내용은 이 브라우저에 자동 저장됩니다. 다른 PC로 옮기거나 백업하려면 프로젝트 파일로 내보내세요. (그림이 아니라 선택값만 저장되어 파일이 작습니다)</p>
+      <div class="btns">
+        <button class="primary" id="bExport">프로젝트 내보내기 (.json)</button>
+        <label class="btn">불러오기 <input type="file" id="fImport" accept="application/json,.json" hidden></label>
+        <button class="danger ghost" id="bReset">새 프로젝트 (초기화)</button>
+      </div>
+      <hr>
+      <div class="field"><label>시드</label><input type="number" id="sSeed" min="1" max="999999"><button id="bSeed" class="ghost">적용</button></div>
+      <p class="muted small">같은 시드와 같은 순서로 뽑으면 같은 소재가 나옵니다. 재현이 필요할 때 씁니다.</p>
+      <div class="field"><label>워터마크</label><input id="sWatermark" placeholder="PNG 좌하단에 작게 (예: @my_toon)" maxlength="40"></div>
+      <div class="muted small" id="storageInfo"></div>
+    </div>
+    <div class="card">
+      <h2>사용 순서</h2>
+      <ol class="howto">
+        <li><b>소재</b> — 🎲 다시 뽑기. 마음에 드는 슬롯은 고정하고 나머지를 다시 뽑습니다. 내 경험을 후보로 추가하면 결과가 내 것이 됩니다.</li>
+        <li><b>스토리</b> — 컷 수를 고르고 콘티 생성. 대사와 샷을 바로 고칩니다.</li>
+        <li><b>캐릭터</b> — 8명 랜덤 생성 → 마음에 드는 캐릭터를 골라 파츠·색을 조정하고 ★ 주인공으로.</li>
+        <li><b>시안</b> — 콘티에서 컷 자동 생성. 배경·표정·말풍선·효과를 만지고 PNG로 저장합니다.</li>
+        <li><b>미리보기</b> — 인스타 게시물·프로필 그리드로 확인. 캡션 글자 수와 해시태그를 검사합니다.</li>
+      </ol>
+      <h2>작동 원리</h2>
+      <p class="muted small">서버도 AI도 없습니다. 미리 써 둔 문장·템플릿과 그려 둔 파츠를 시드 난수로 조합합니다. 와이파이를 꺼도 전부 동작하며, 이 HTML 파일 하나가 프로그램 전체입니다.</p>
+      <h2>버전</h2>
+      <ul class="muted small" id="changelog"><li>1.0.0 — 첫 공개: 소재·스토리·캐릭터·시안·미리보기·저장·AI 확장</li></ul>
+    </div>
+  </div>
+</section>
+</main>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="engine.js"></script>
+<script src="data/topics.js"></script>
+<script src="data/beats.js"></script>
+<script src="data/parts.js"></script>
+<script src="data/presets.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
