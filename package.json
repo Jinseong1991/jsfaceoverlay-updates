@@ -1,0 +1,36 @@
+{
+  "name": "bt-battery-overlay",
+  "productName": "BT Battery Overlay",
+  "version": "1.0.0",
+  "description": "Windows Bluetooth device battery overlay with remaining-time estimate",
+  "main": "src/main.js",
+  "author": "jinseong1991",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test",
+    "icons": "node build/make-icons.js",
+    "dist": "electron-builder --win portable --x64",
+    "dist:dir": "electron-builder --win dir --x64"
+  },
+  "devDependencies": {
+    "electron": "33.4.11",
+    "electron-builder": "25.1.8"
+  },
+  "build": {
+    "appId": "com.jinseong1991.btbatteryoverlay",
+    "productName": "BT Battery Overlay",
+    "directories": { "output": "dist" },
+    "files": ["src/**/*", "assets/**/*", "package.json"],
+    "asar": true,
+    "win": {
+      "target": [{ "target": "portable", "arch": ["x64"] }],
+      "icon": "assets/icon.ico",
+      "signAndEditExecutable": false
+    },
+    "portable": {
+      "artifactName": "BT-Battery-Overlay-${version}-portable.exe"
+    }
+  }
+}

@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ko" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
+  <title>BT Battery Overlay</title>
+  <link rel="stylesheet" href="overlay.css">
+</head>
+<body>
+  <div id="root">
+    <div class="panel">
+      <div class="header">
+        <div class="title"><span class="dot" id="dot"></span><span id="title">Bluetooth 배터리</span></div>
+        <div class="actions">
+          <button class="iconbtn" id="btn-refresh" title="새로고침"></button>
+          <button class="iconbtn" id="btn-settings" title="설정"></button>
+          <button class="iconbtn" id="btn-hide" title="숨기기 (트레이에서 다시 표시)"></button>
+        </div>
+      </div>
+      <div class="list" id="list"></div>
+      <div class="footer" id="footer"></div>
+    </div>
+  </div>
+  <script src="common.js"></script>
+  <script src="overlay.js"></script>
+</body>
+</html>
