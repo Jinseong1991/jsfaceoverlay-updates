@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 400" width="1080" height="400">
+  <rect width="1080" height="400" fill="#14123A"/>
+  <svg x="70" y="60" width="280" height="280" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="wsky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1E1B4B"/>
+      <stop offset="0.55" stop-color="#3730A3"/>
+      <stop offset="1" stop-color="#0EA5E9"/>
+    </linearGradient>
+    <radialGradient id="wglow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FDE68A" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#FDE68A" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="wwing" x1="1" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#99F6E4"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#wsky)"/>
+  <circle cx="384" cy="132" r="80" fill="url(#wglow)"/>
+  <circle cx="384" cy="132" r="30" fill="#FBBF24"/>
+  <path d="M 300 205 L 300 318 A 82 82 0 0 1 136 318" fill="none" stroke="#FFFFFF" stroke-width="58" stroke-linecap="round"/>
+  <path fill="url(#wwing)" d="M 329 248
+    C 318 150, 236 70, 96 52
+    Q 100 128, 150 132
+    Q 150 180, 202 180
+    Q 210 222, 256 218
+    Q 276 252, 329 248 Z"/>
+</svg>
+  <text x="400" y="232" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="700" font-size="168" letter-spacing="-4" fill="#FFFFFF">Jinyu</text>
+  <text x="406" y="300" font-family="Inter Display, Inter, Helvetica, Arial, sans-serif" font-weight="600" font-size="34" letter-spacing="9" fill="#99F6E4">FREEDOM · BY JINSEONG</text>
+</svg>

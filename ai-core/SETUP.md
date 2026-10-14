@@ -22,7 +22,8 @@
 1. 텔레그램에서 **@BotFather** 를 검색해 대화를 시작
 2. `/newbot` 입력 → 봇 이름과 아이디(`..._bot` 으로 끝나야 함) 입력
 3. 받은 토큰(`123456:ABC...`)을 메모 → `.env` 의 `TELEGRAM_BOT_TOKEN`
-4. `TELEGRAM_OWNER_ID` 는 비워두고 서버를 먼저 띄운 뒤, 내 봇에게 아무 말이나 보내면 **내 숫자 ID를 알려줍니다**. 그 숫자를 넣고 서버를 재시작하면 그때부터 나만 쓸 수 있어요.
+4. (선택) 봇 프로필 사진: `/setuserpic` → 내 봇 선택 → `ai-core/brand/icon-512.png` 전송
+5. `TELEGRAM_OWNER_ID` 는 비워두고 서버를 먼저 띄운 뒤, 내 봇에게 아무 말이나 보내면 **내 숫자 ID를 알려줍니다**. 그 숫자를 넣고 서버를 재시작하면 그때부터 나만 쓸 수 있어요.
 
 ## 2. 두뇌 API 키 발급 (전부 무료)
 많이 넣을수록 빠르고, 한 곳이 막혀도 다른 곳으로 자동 전환돼요.
@@ -70,7 +71,7 @@
    sudo docker compose logs -f core                     # "노드 server1 시작 ... 두뇌 N개" 가 보이면 성공
    sudo docker compose exec core python -m app.main check   # 두뇌별 응답 속도 점검
    ```
-7. 텔레그램에서 내 봇에게 말 걸기 → 1단계 4번대로 `TELEGRAM_OWNER_ID` 설정 → `sudo docker compose up -d` 로 재시작
+7. 텔레그램에서 내 봇에게 말 걸기 → 1단계 5번대로 `TELEGRAM_OWNER_ID` 설정 → `sudo docker compose up -d` 로 재시작
 
 **자체 두뇌(선택):** 외부 API가 전부 막혀도 생각할 수 있게 서버 CPU로 작은 모델을 돌려요. `.env` 에서 `LOCAL_LLM_URL` 줄의 `#` 을 지우고 `bash deploy/oracle-setup.sh` 를 다시 실행하면 돼요. 처음 실행할 때 모델(약 2GB)을 내려받아요.
 
