@@ -23,3 +23,21 @@ Horizontal logo lockup: the Jinyu app icon on the left, the word "Jinyu" in a mo
 with a small widely-spaced tagline below: "FREEDOM · BY JINSEONG" in ocean blue (#1667A8).
 White background, generous whitespace, minimal, premium tech brand. 2160x800.
 ```
+
+## 내 PC의 Stable Diffusion (ComfyUI / Fooocus / WebUI, SDXL 계열 모델)
+- 크기 1024x1024, Steps 30, CFG 6~7
+- `icon-1024.png` 를 img2img(또는 ControlNet Canny/Lineart, 강도 0.5~0.7)에 넣으면 형태를 유지한 채 질감만 고급스럽게 바뀌어요.
+
+Prompt:
+```
+minimal premium app icon, single elegant white letter J whose top stroke flows into a tapered rising wing,
+small golden sun in upper right, rounded square, deep navy to dawn blue gradient background,
+aurora mint and teal wing feathers, flat vector logo, geometric, clean negative space,
+dribbble, behance, apple design award, centered, high detail, sharp edges
+```
+
+Negative prompt:
+```
+text, letters other than J, watermark, signature, 3d render, photo, realistic, noisy, cluttered,
+multiple wings, extra objects, blurry, low quality, jpeg artifacts, gradient banding
+```
