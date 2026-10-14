@@ -76,9 +76,9 @@
 
 ## 5. 무료 도메인 연결 (HTTPS)
 웹 채팅 화면과 PC 에이전트 연결에는 `https://` 주소가 필요해요. 텔레그램만 쓸 거면 건너뛰어도 돼요.
-1. https://www.duckdns.org 로그인 → 원하는 이름(예: `nuri-ai`) 만들고 IP 칸에 **서버 공인 IP** 입력
-2. `.env` 에 `DOMAIN=nuri-ai.duckdns.org` 넣고 `bash deploy/oracle-setup.sh` 다시 실행
-3. 브라우저에서 `https://nuri-ai.duckdns.org` 접속 → 처음 보낼 때 `OWNER_TOKEN` 입력
+1. https://www.duckdns.org 로그인 → 원하는 이름(예: `jinyu-ai`) 만들고 IP 칸에 **서버 공인 IP** 입력
+2. `.env` 에 `DOMAIN=jinyu-ai.duckdns.org` 넣고 `bash deploy/oracle-setup.sh` 다시 실행
+3. 브라우저에서 `https://jinyu-ai.duckdns.org` 접속 → 처음 보낼 때 `OWNER_TOKEN` 입력
 
 ## 6. 두 번째 서버 (예비, 선택)
 메인 서버가 죽으면 텔레그램 응답과 학습을 자동으로 이어받아요. **3번 Supabase 설정이 필수**예요.
@@ -92,7 +92,7 @@
 ## 7. GitHub 자동 깨우기·백업
 무료 서버가 잠들지 않게 30분마다 깨우고, 매일 기억을 암호화해 백업해요.
 1. 저장소 **Settings → Secrets and variables → Actions → New repository secret**
-   - `AI_NODE_URLS`: 서버 주소들, 쉼표로 구분 (예: `https://nuri-ai.duckdns.org,https://xxx.hf.space`)
+   - `AI_NODE_URLS`: 서버 주소들, 쉼표로 구분 (예: `https://jinyu-ai.duckdns.org,https://xxx.hf.space`)
    - `AI_OWNER_TOKEN`: `.env` 의 `OWNER_TOKEN` 과 같은 값
    - `AI_BACKUP_PASSPHRASE`: 백업 암호 (잃어버리면 백업을 못 열어요)
 2. GitHub 예약 실행은 **기본 브랜치(main)에 있는 워크플로만** 동작해요. 작업 브랜치를 main에 합쳐야 시작돼요(원하시면 PR을 만들어 드릴게요).
@@ -104,7 +104,7 @@ PC를 켜고 에이전트를 실행해 둔 동안에는 PC의 GPU를 최우선 �
 2. https://www.python.org 에서 Python 설치 → `pip install websockets httpx`
 3. 저장소의 `ai-core/pc_agent/agent.py` 를 내려받아 실행:
    ```bash
-   python agent.py --server https://nuri-ai.duckdns.org --token PC_TOKEN값 --model qwen2.5:7b
+   python agent.py --server https://jinyu-ai.duckdns.org --token PC_TOKEN값 --model qwen2.5:7b
    ```
    - 허용 시간 제한: `--hours 9-23` (밤에는 PC를 안 씀)
    - 서버가 여러 대면 `--server` 를 여러 번 쓰기

@@ -66,4 +66,4 @@ def test_pick_tier():
 
 def test_persona_name():
     p = Persona(ROOT / "config" / "persona.md", "Asia/Seoul")
-    assert p.name == "누리"
+    assert p.name == "Jinyu"
