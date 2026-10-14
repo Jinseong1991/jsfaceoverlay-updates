@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instatoon Kit 데모</title>
+<style>
+  body{font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;margin:0;padding:20px;background:#f6f4f1;color:#222;line-height:1.6}
+  h1{font-size:20px;margin:0 0 4px}h2{font-size:16px;margin:0 0 8px}
+  .row{display:flex;flex-wrap:wrap;gap:16px;margin-bottom:20px}
+  .panel{background:#fff;border:1px solid #ddd;border-radius:10px;padding:14px;flex:1 1 300px;min-width:0}
+  button{font:inherit;padding:7px 12px;border:1px solid #bbb;border-radius:7px;background:#fff;cursor:pointer}
+  button.primary{background:#6a4cc8;color:#fff;border-color:#6a4cc8}
+  .out{background:#f1eef8;border-radius:8px;padding:10px;margin-top:8px;font-size:14px;white-space:pre-wrap}
+  .chars{display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:8px;margin-top:8px}
+  .chars svg{width:100%;height:auto;background:#f3f1ee;border-radius:8px;cursor:pointer;border:2px solid transparent}
+  .chars svg.sel{border-color:#6a4cc8}
+  canvas{width:100%;max-width:324px;height:auto;border:1px solid #ddd;background:#fff;display:block}
+  .ig-feed{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;max-width:324px;margin-top:8px}
+  .ig-feed div{aspect-ratio:1/1;overflow:hidden;background:#e8e8e8}.ig-feed img{width:100%;height:100%;object-fit:cover;display:block}
+  small{color:#666}
+  textarea{width:100%;box-sizing:border-box;font:inherit;padding:8px;border:1px solid #ccc;border-radius:7px}
+</style>
+</head>
+<body>
+<h1>Instatoon Kit 데모</h1>
+<p><small>서버·API 없음. 이 파일을 더블클릭해 열어도 전부 동작합니다. 코드는 instatoon-kit.js, 설명은 ../0X-*.md</small></p>
+
+<div class="row">
+  <div class="panel">
+    <h2>1. 소재 추천 (02)</h2>
+    <button class="primary" id="bTopic">소재 뽑기</button>
+    <button id="bLock">장소 '편의점' 고정으로 뽑기</button>
+    <div class="out" id="oTopic"></div>
+    <small id="oCount"></small>
+  </div>
+  <div class="panel">
+    <h2>2. 4컷 콘티 (03)</h2>
+    <button class="primary" id="bStory">이 소재로 콘티 만들기</button>
+    <div class="out" id="oStory">먼저 소재를 뽑으세요.</div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="panel">
+    <h2>3. 캐릭터 생성 (04)</h2>
+    <button class="primary" id="bChars">8명 생성</button> <small id="oParts"></small>
+    <div class="chars" id="oChars"></div>
+    <small>클릭하면 주인공으로 선택</small>
+  </div>
+  <div class="panel">
+    <h2>4. 시안 컷 + 미리보기 (05 · 06)</h2>
+    <button class="primary" id="bCut">콘티의 반전 컷을 시안으로</button>
+    <button id="bDl">PNG 저장</button>
+    <button id="bSave">프로젝트 저장(localStorage)</button>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:8px">
+      <div><canvas id="cv" width="1080" height="1350"></canvas><small>1080×1350 작업 캔버스</small></div>
+      <div><div class="ig-feed" id="feed"></div><small>피드 3열 (1:1 크롭)</small></div>
+    </div>
+    <textarea id="cap" rows="3" placeholder="캡션 입력 → 글자 수·해시태그 검사">오늘도 편의점 #인스타툰 #일상툰</textarea>
+    <small id="oCap"></small>
+  </div>
+</div>
+
+<script src="instatoon-kit.js"></script>
+<script>
+(function () {
+  const K = window.InstatoonKit;
+  const store = K.makeStore("instatoon-demo:v1");
+  const state = store.load({ seed: 42, topic: null, story: null, chars: [], main: null, cut: null });
+
+  const gen = K.makeTopicGenerator(K.SAMPLE_TOPICS, { seed: state.seed });
+  const $ = id => document.getElementById(id);
+
+  function showTopic(t) {
+    state.topic = t;
+    $("oTopic").textContent = t.text + "\n톤: " + t.tone + "  · id " + JSON.stringify(t.id);
+    store.autosave(state);
+  }
+  $("bTopic").onclick = () => showTopic(gen());
+  $("bLock").onclick = () => showTopic(gen({ "장소": "편의점" }));
+  $("oCount").textContent = "조합 수 약 " + K.combinationCountTopics(K.SAMPLE_TOPICS).toLocaleString() + "가지";
+
+  $("bStory").onclick = () => {
+    if (!state.topic) return;
+    state.story = K.storyboard(state.topic, K.SAMPLE_BEATS, { seed: state.seed });
+    $("oStory").textContent = state.story.map(b => b.cut + "컷 [" + b.role + " · " + b.shot + "] " + b.line + "\n    → " + b.hint).join("\n");
+    store.autosave(state);
+  };
+
+  function renderChars() {
+    const box = $("oChars"); box.innerHTML = "";
+    state.chars.forEach((c, i) => {
+      const d = document.createElement("div"); d.innerHTML = K.characterSVG(K.SAMPLE_PARTS, c);
+      const svg = d.firstChild; if (state.main === i) svg.classList.add("sel");
+      svg.onclick = () => { state.main = i; renderChars(); store.autosave(state); };
+      box.appendChild(svg);
+    });
+  }
+  $("bChars").onclick = () => {
+    const r = K.rng(Date.now() & 0xffff);
+    state.chars = Array.from({ length: 8 }, () => K.randomCharacter(K.SAMPLE_PARTS, r));
+    state.main = 0; renderChars(); store.autosave(state);
+  };
+  $("oParts").textContent = "조합 수 " + K.combinationCountParts(K.SAMPLE_PARTS).toLocaleString() + "가지";
+
+  $("bCut").onclick = async () => {
+    if (state.main == null || !state.chars.length) $("bChars").onclick();
+    const beat = (state.story && state.story.find(b => b.role === "반전")) || { shot: "클로즈업", line: "알고 보니 내 착각이었다!!", role: "반전" };
+    state.cut = {
+      size: [1080, 1350], bg: { type: "preset", id: "room" },
+      fx: [{ type: "speedlines", cx: 540, cy: 760 }],
+      chars: [{ ref: "main", x: 540, y: 780, shot: beat.shot, expr: K.SAMPLE_PARTS.exprByRole[beat.role] || "basic" }],
+      bubbles: [{ text: beat.line, x: 110, y: 120, maxW: 700, tail: [480, 470], style: beat.role === "반전" ? "shout" : "round" }],
+      caption: { text: (state.topic && state.topic.text) || "" }
+    };
+    try { await document.fonts.load("600 34px 'Noto Sans KR'"); } catch (e) {}
+    await K.renderCut($("cv"), state.cut, { main: state.chars[state.main] }, K.SAMPLE_PARTS);
+    const url = $("cv").toDataURL("image/jpeg", 0.8);
+    K.renderFeed($("feed"), [url, url, url], 9);
+    store.autosave(state);
+  };
+  $("bDl").onclick = () => K.downloadCanvas($("cv"), "cut3.png");
+  $("bSave").onclick = () => { store.save(state); $("oCap").textContent = "저장됨 (localStorage). 새로고침해도 유지."; };
+
+  function capCheck() {
+    const c = K.checkCaption($("cap").value);
+    $("oCap").textContent = "글자 " + c.length + "/2200" + (c.over ? " 초과!" : "") + " · 해시태그 " + c.hashtags + "/30" + (c.hashtagOver ? " 초과!" : "") + (c.folded ? " · 125자 이후 '더 보기'로 접힘" : "");
+  }
+  $("cap").oninput = capCheck; capCheck();
+
+  // 복원
+  if (state.topic) showTopic(state.topic);
+  if (state.story) $("oStory").textContent = state.story.map(b => b.cut + "컷 [" + b.role + " · " + b.shot + "] " + b.line).join("\n");
+  if (state.chars.length) renderChars(); else $("bChars").onclick();
+  if (!state.topic) $("bTopic").onclick();
+})();
+</script>
+</body>
+</html>
