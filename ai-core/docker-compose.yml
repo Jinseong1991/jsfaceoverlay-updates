@@ -1,0 +1,37 @@
+# 서버 1대에서:  docker compose up -d
+# 자체 두뇌까지:  docker compose --profile local-brain up -d   (.env 의 LOCAL_LLM_URL 주석 해제)
+# HTTPS 주소까지: docker compose --profile https up -d          (.env 의 DOMAIN 설정)
+services:
+  core:
+    build: .
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config      # 인격/두뇌 목록을 서버에서 바로 고칠 수 있게
+    ports:
+      - "127.0.0.1:8080:8080"
+    restart: unless-stopped
+
+  llama:                          # 자체 두뇌: CPU로 도는 작은 오픈소스 모델
+    profiles: ["local-brain"]
+    image: ghcr.io/ggml-org/llama.cpp:server
+    command: ["-hf", "${LOCAL_MODEL:-Qwen/Qwen2.5-3B-Instruct-GGUF:Q4_K_M}",
+              "--host", "0.0.0.0", "--port", "8080", "-c", "8192", "--jinja"]
+    volumes:
+      - llama-cache:/root/.cache/llama.cpp
+    restart: unless-stopped
+
+  caddy:                          # 무료 자동 HTTPS (웹 채팅, PC 에이전트 연결용)
+    profiles: ["https"]
+    image: caddy:2
+    command: caddy reverse-proxy --from ${DOMAIN:-localhost} --to core:8080
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy-data:/data
+    restart: unless-stopped
+
+volumes:
+  llama-cache:
+  caddy-data:

@@ -1,0 +1,33 @@
+# 매일 기억 전체를 암호화해 백업한다 (90일 보관). 복원: 아래 '복원 방법' 참고.
+# 필요한 저장소 Secrets: AI_NODE_URLS, AI_OWNER_TOKEN, AI_BACKUP_PASSPHRASE
+# 복원: openssl enc -d -aes-256-cbc -pbkdf2 -in mind.json.enc -out mind.json -pass pass:비밀번호
+#       python -m app.main import mind.json
+name: ai-core 기억 백업
+on:
+  schedule:
+    - cron: "17 18 * * *"   # 한국 시간 새벽 3시 17분
+  workflow_dispatch:
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 기억 내보내기 + 암호화
+        env:
+          URLS: ${{ secrets.AI_NODE_URLS }}
+          TOKEN: ${{ secrets.AI_OWNER_TOKEN }}
+          PASS: ${{ secrets.AI_BACKUP_PASSPHRASE }}
+        run: |
+          if [ -z "$URLS" ] || [ -z "$PASS" ]; then echo "Secrets 미설정 - 건너뜀"; exit 0; fi
+          IFS=',' read -ra NODES <<< "$URLS"
+          for url in "${NODES[@]}"; do
+            if curl -fsS -m 300 "${url%/}/export" -H "Authorization: Bearer $TOKEN" -o mind.json; then break; fi
+          done
+          test -s mind.json
+          openssl enc -aes-256-cbc -pbkdf2 -salt -in mind.json -out mind.json.enc -pass env:PASS
+          rm mind.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mind-backup-${{ github.run_id }}
+          path: mind.json.enc
+          retention-days: 90
+          if-no-files-found: ignore

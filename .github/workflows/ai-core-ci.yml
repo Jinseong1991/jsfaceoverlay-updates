@@ -1,0 +1,29 @@
+name: ai-core 테스트
+on:
+  push:
+    paths: ["ai-core/**", ".github/workflows/ai-core-ci.yml"]
+  pull_request:
+    paths: ["ai-core/**"]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_PASSWORD: test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    defaults:
+      run:
+        working-directory: ai-core
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements-dev.txt
+      - run: python -m pytest -q
+        env:
+          AI_TEST_PG_URL: postgresql://postgres:test@localhost:5432/postgres

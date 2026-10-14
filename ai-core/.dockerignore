@@ -1,0 +1,8 @@
+.env
+data/
+tests/
+pc_agent/
+deploy/
+__pycache__/
+*.pyc
+.pytest_cache/
