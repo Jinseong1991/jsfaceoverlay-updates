@@ -12,6 +12,12 @@
   $('#btn-bt').addEventListener('click', () => window.api.openBluetoothSettings());
   $('#btn-quit').addEventListener('click', () => window.api.quit());
   $('#btn-clear').addEventListener('click', () => window.api.clearHistory());
+  $('#btn-diag').addEventListener('click', async () => {
+    const b = $('#btn-diag');
+    const n = await window.api.copyDiagnostics();
+    b.textContent = `복사됨 (${Math.round(n / 1024)} KB)`;
+    setTimeout(() => { b.textContent = '진단 정보 복사'; }, 2500);
+  });
   $('#btn-refresh').addEventListener('click', async () => {
     const b = $('#btn-refresh'); b.classList.add('spin');
     try { await window.api.refresh(); } finally { b.classList.remove('spin'); }
@@ -84,7 +90,7 @@
     $('#dev-hint').innerHTML = (sel.size === 0
       ? '아무것도 선택하지 않으면 <b>배터리를 보고하는 연결된 장치</b>가 모두 표시됩니다. '
       : `선택한 ${sel.size}개 장치만 오버레이에 표시됩니다. `)
-      + (noBat.length ? `<br><b>${escapeHtml(noBat.join(', '))}</b>은(는) Windows에 배터리 정보를 보고하지 않아 % 표시가 불가능합니다. (제조사 전용 소프트웨어에서만 확인 가능)` : '');
+      + (noBat.length ? `<br><b>${escapeHtml(noBat.join(', '))}</b>은(는) 현재 연결 모드에서 Windows에 배터리를 보고하지 않습니다. Windows 설정 › Bluetooth 에도 %가 없으면 앱에서도 읽을 수 없습니다. 같은 장치에 LE(5.0) 페어링이 있으면 그 모드로 연결했을 때 배터리가 표시되는 경우가 많습니다.` : '');
     $('#err').textContent = st.lastError ? `오류: ${st.lastError}` : '';
   }
 

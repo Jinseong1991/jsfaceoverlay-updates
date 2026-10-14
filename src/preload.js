@@ -12,6 +12,7 @@ contextBridge.exposeInMainWorld('api', {
   quit: () => ipcRenderer.invoke('quit'),
   clearHistory: () => ipcRenderer.invoke('clear-history'),
   openBluetoothSettings: () => ipcRenderer.invoke('open-bluetooth-settings'),
+  copyDiagnostics: () => ipcRenderer.invoke('copy-diagnostics'),
   overlayResize: (h) => ipcRenderer.invoke('overlay-resize', h),
   onState: (cb) => {
     const handler = (_e, state) => cb(state);

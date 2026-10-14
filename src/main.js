@@ -1,7 +1,7 @@
 'use strict';
-const { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage, Notification, screen, shell } = require('electron');
+const { app, BrowserWindow, Tray, Menu, ipcMain, nativeImage, Notification, screen, shell, clipboard } = require('electron');
 const path = require('node:path');
-const { listDevices } = require('./bluetooth');
+const { listDevices, getDiagnostics } = require('./bluetooth');
 const { addSample, estimate } = require('./estimator');
 const { JsonStore, DEFAULT_SETTINGS } = require('./store');
 
@@ -335,6 +335,25 @@ ipcMain.handle('minimize-settings', () => { if (settingsWin) settingsWin.minimiz
 ipcMain.handle('quit', () => { quitting = true; app.quit(); return true; });
 ipcMain.handle('clear-history', () => { history.data = {}; history.save(); broadcast(); return true; });
 ipcMain.handle('open-bluetooth-settings', () => { shell.openExternal('ms-settings:bluetooth'); return true; });
+ipcMain.handle('copy-diagnostics', () => {
+  const diag = getDiagnostics();
+  let raw = null;
+  try { raw = diag.stdout ? JSON.parse(diag.stdout) : null; } catch { raw = diag.stdout; }
+  const report = {
+    app: `BT Battery Overlay ${app.getVersion()}`,
+    platform: `${process.platform} ${require('node:os').release()}`,
+    at: new Date().toISOString(),
+    lastPollAt: lastPollAt ? new Date(lastPollAt).toISOString() : null,
+    lastError,
+    psError: diag.error,
+    psStderr: diag.stderr,
+    devices: computeDevices().map(({ estimate, ...d }) => d),
+    raw,
+  };
+  const text = JSON.stringify(report, null, 2);
+  clipboard.writeText(text);
+  return text.length;
+});
 ipcMain.handle('overlay-resize', (_e, height) => {
   if (!overlayWin || overlayWin.isDestroyed()) return false;
   const h = clamp(Math.ceil(Number(height) || 60), 40, 900);
