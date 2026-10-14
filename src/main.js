@@ -338,8 +338,13 @@ ipcMain.handle('open-bluetooth-settings', () => { shell.openExternal('ms-setting
 ipcMain.handle('overlay-resize', (_e, height) => {
   if (!overlayWin || overlayWin.isDestroyed()) return false;
   const h = clamp(Math.ceil(Number(height) || 60), 40, 900);
-  const [w] = overlayWin.getSize();
-  overlayWin.setSize(w, h);
+  const [w, cur] = overlayWin.getSize();
+  if (cur === h) return true;
+  // A non-resizable window ignores setSize on some platforms, so lift the
+  // restriction for the duration of the programmatic resize.
+  overlayWin.setResizable(true);
+  overlayWin.setSize(w, h, false);
+  overlayWin.setResizable(false);
   return true;
 });
 
