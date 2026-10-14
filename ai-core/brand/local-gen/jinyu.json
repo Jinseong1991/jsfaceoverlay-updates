@@ -1,0 +1,13 @@
+[
+ {"name": "jinyu_mascot", "w": 1024, "h": 1024, "seeds": [1, 2, 3, 4, 5, 6],
+  "prompt": "no humans, original, white bird, small bird, spread wings, flying, upward, wings with aurora mint feathers and teal feather tips, glowing feathers, golden sun behind, dawn, deep navy night sky fading to blue, stars, simple background, centered, full body, soft rim light, anime coloring",
+  "neg": "multiple birds, human, humanoid, realistic, photo, 3d, dark, horror, blood"},
+
+ {"name": "jinyu_emblem", "w": 1024, "h": 1024, "seeds": [11, 12, 13, 14, 15, 16],
+  "prompt": "no humans, original, emblem, symbol, single white feathered wing, rising, small golden sun, circle, deep navy background, gradient background, minimalist, flat color, clean lineart, simple background, centered, negative space, elegant",
+  "neg": "human, animal face, busy background, multiple wings, realistic, photo, 3d, clutter"},
+
+ {"name": "jinyu_banner", "w": 1344, "h": 768, "seeds": [21, 22, 23, 24],
+  "prompt": "no humans, original, scenery, dawn, sunrise, golden sun on horizon, sea of clouds, deep navy sky fading to blue, stars fading, white bird flying, mint feathers floating in the air, wide shot, from below, light rays, peaceful, freedom, beautiful sky, anime coloring",
+  "neg": "human, buildings, city, dark, horror, realistic, photo"}
+]
